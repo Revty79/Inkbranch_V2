@@ -1,4 +1,7 @@
-import { checkDatabaseHealth, closeDatabaseHealthResources } from "../src/data/db";
+import {
+  checkDatabaseHealth,
+  closeDatabaseHealthResources
+} from "../src/data/db";
 
 async function main(): Promise<void> {
   const result = await checkDatabaseHealth();
@@ -14,7 +17,8 @@ async function main(): Promise<void> {
 
 main()
   .catch((error: unknown) => {
-    const message = error instanceof Error ? error.message : "Unexpected DB check failure.";
+    const message =
+      error instanceof Error ? error.message : "Unexpected DB check failure.";
     console.error(`DB health check failed: ${message}`);
     process.exitCode = 1;
   })

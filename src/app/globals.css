@@ -34,3 +34,368 @@ body {
 .route-nav a:hover {
   text-decoration: underline;
 }
+
+.studio-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 18rem 1fr;
+}
+
+.studio-shell-sidebar {
+  border-right: 1px solid #dde5ea;
+  background: #fbfcfd;
+  padding: 1.5rem 1rem;
+}
+
+.studio-sidebar h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.studio-sidebar p {
+  margin: 0 0 1rem;
+  color: #4f5a64;
+  font-size: 0.9rem;
+}
+
+.studio-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.studio-nav a {
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.4rem;
+  text-decoration: none;
+  color: #11344f;
+  background: #eef4f8;
+  font-size: 0.92rem;
+}
+
+.studio-nav a:hover {
+  background: #deecf5;
+}
+
+.studio-shell-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.studio-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #dde5ea;
+  background: #ffffff;
+}
+
+.studio-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.studio-header p {
+  margin: 0.35rem 0 0;
+  color: #4f5a64;
+}
+
+.studio-shell-content {
+  padding: 1.25rem 1.5rem;
+}
+
+.studio-section-header h2 {
+  margin: 0;
+}
+
+.studio-section-header p {
+  margin: 0.5rem 0 0;
+  color: #4f5a64;
+}
+
+.studio-overview-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 0.9rem;
+}
+
+.studio-section-card {
+  border: 1px solid #d6e1e8;
+  border-radius: 0.55rem;
+  background: #ffffff;
+  padding: 0.9rem;
+}
+
+.studio-section-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.studio-section-card h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.studio-section-card p {
+  margin: 0.65rem 0 0.8rem;
+  color: #4f5a64;
+  font-size: 0.92rem;
+}
+
+.studio-section-card a {
+  color: #0f5c8a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.studio-section-card a:hover {
+  text-decoration: underline;
+}
+
+.studio-status {
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.72rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+}
+
+.studio-status-planned {
+  color: #7b5b00;
+  background: #ffefc2;
+}
+
+.studio-status-ready {
+  color: #0d5f32;
+  background: #d5f5e3;
+}
+
+.studio-empty-state {
+  margin-top: 1rem;
+  border: 1px dashed #b9c7d2;
+  border-radius: 0.55rem;
+  background: #fafcfe;
+  padding: 1rem;
+}
+
+.studio-empty-state h3 {
+  margin: 0;
+}
+
+.studio-empty-state p {
+  margin: 0.45rem 0 0;
+  color: #4f5a64;
+}
+
+.studio-list-actions {
+  margin-top: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.studio-list-actions a {
+  display: inline-block;
+  border-radius: 0.4rem;
+  padding: 0.45rem 0.7rem;
+  background: #1a6ca1;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.studio-list-actions a:hover {
+  background: #0f5c8a;
+}
+
+.studio-list-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 0.8rem;
+}
+
+.studio-list-grid li {
+  border: 1px solid #d6e1e8;
+  border-radius: 0.55rem;
+  background: #ffffff;
+  padding: 0.8rem;
+}
+
+.studio-list-grid h3 {
+  margin: 0;
+}
+
+.studio-list-grid p {
+  margin: 0.4rem 0 0;
+  color: #3e4d58;
+}
+
+.studio-inline-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.7rem;
+}
+
+.studio-inline-links a {
+  color: #0f5c8a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.studio-inline-links a:hover {
+  text-decoration: underline;
+}
+
+.studio-detail-panel {
+  margin-top: 1rem;
+  border: 1px solid #d6e1e8;
+  border-radius: 0.55rem;
+  background: #ffffff;
+  padding: 1rem;
+}
+
+.studio-detail-panel p {
+  margin: 0.45rem 0;
+}
+
+.studio-subnav {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.studio-subnav a {
+  border: 1px solid #c5d5e0;
+  border-radius: 999px;
+  padding: 0.3rem 0.65rem;
+  text-decoration: none;
+  color: #164e72;
+  background: #f5f9fc;
+  font-size: 0.86rem;
+}
+
+.studio-subnav a:hover {
+  background: #e8f2f8;
+}
+
+.studio-version-context {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #d6e1e8;
+  border-radius: 0.55rem;
+  background: #ffffff;
+  padding: 0.8rem;
+}
+
+.studio-version-context form {
+  display: grid;
+  gap: 0.55rem;
+  max-width: 26rem;
+}
+
+.studio-version-context label {
+  font-weight: 600;
+  color: #23313c;
+}
+
+.studio-version-context select,
+.studio-version-context button {
+  border: 1px solid #bfd0dc;
+  border-radius: 0.4rem;
+  padding: 0.45rem 0.55rem;
+  font: inherit;
+}
+
+.studio-version-context button {
+  width: fit-content;
+  background: #f6fbff;
+  cursor: pointer;
+}
+
+.studio-form {
+  margin-top: 1rem;
+  border: 1px solid #d6e1e8;
+  border-radius: 0.55rem;
+  background: #ffffff;
+  padding: 1rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.studio-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+  color: #23313c;
+}
+
+.studio-form input,
+.studio-form select,
+.studio-form textarea {
+  border: 1px solid #bfd0dc;
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.6rem;
+  font: inherit;
+  color: #121212;
+  background: #ffffff;
+}
+
+.studio-form textarea {
+  resize: vertical;
+}
+
+.studio-checkbox {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.studio-checkbox input {
+  width: auto;
+}
+
+.studio-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.studio-form-actions button {
+  border: 0;
+  border-radius: 0.4rem;
+  background: #1a6ca1;
+  color: #ffffff;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.studio-form-actions button:hover {
+  background: #0f5c8a;
+}
+
+.studio-form-actions a {
+  color: #0f5c8a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.studio-form-actions a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .studio-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .studio-shell-sidebar {
+    border-right: 0;
+    border-bottom: 1px solid #dde5ea;
+  }
+}

@@ -1,4 +1,2 @@
-/**
- * Mutation placeholder export.
- */
-export const MUTATIONS_PLACEHOLDER = "mutations-placeholder";
+export * as authoringMutations from "./authoring";
+export * as runtimeMutations from "./runtime";

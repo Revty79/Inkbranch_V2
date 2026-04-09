@@ -1,6 +1,10 @@
-/**
- * Validation contract placeholders for continuity and legality checks.
- */
-export interface ValidatorContractsPlaceholder {
-  readonly tag: "validator-contracts-placeholder";
-}
+export type {
+  ContinuityValidationResult,
+  EndingValidationResult,
+  RevealValidationResult,
+  ValidationIssue,
+  ValidationIssueCode,
+  ValidationResult,
+  ValidationSeverity,
+  ValidationSource
+} from "@/core/domain/types";

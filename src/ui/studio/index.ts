@@ -1,4 +1,12 @@
-/**
- * Studio UI placeholder exports.
- */
-export const STUDIO_UI_PLACEHOLDER = "studio-ui-placeholder";
+export { StudioHeader } from "./layout/StudioHeader";
+export { StudioNav, STUDIO_NAV_ITEMS } from "./layout/StudioNav";
+export { StudioShell } from "./layout/StudioShell";
+export { StudioSidebar } from "./layout/StudioSidebar";
+export { StudioOverviewPanel } from "./overview/StudioOverviewPanel";
+export { StudioSectionCard } from "./overview/StudioSectionCard";
+export { StudioEmptyState } from "./shared/StudioEmptyState";
+export { StudioFormActions } from "./shared/StudioFormActions";
+export { StudioSectionHeader } from "./shared/StudioSectionHeader";
+export { StudioStatusBadge } from "./shared/StudioStatusBadge";
+export { StudioSubnav } from "./shared/StudioSubnav";
+export { StudioVersionContext } from "./shared/StudioVersionContext";

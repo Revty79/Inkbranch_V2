@@ -20,7 +20,8 @@ export async function checkDatabaseHealth(): Promise<DatabaseHealthResult> {
   } catch (error) {
     return {
       ok: false,
-      message: error instanceof Error ? error.message : "Unknown database error."
+      message:
+        error instanceof Error ? error.message : "Unknown database error."
     };
   }
 }
