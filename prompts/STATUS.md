@@ -1,4 +1,4 @@
-# Inkbranch v2 Status
+﻿# Inkbranch v2 Status
 
 ## Project
 Full rebuild of Inkbranch as a planner-led, book-first, world-first interactive fiction platform.
@@ -34,11 +34,12 @@ Foundation rebuild
 - Bootstrap workflow defined
 - Sequential Codex execution model defined
 - Prompt queue planned
-- Implementation not yet started
+- Foundation scaffold initialized and verified
+- Tooling guardrails established and verified
 
 ## Queue
-- [ ] 00_foundation_scaffold.md
-- [ ] 01_tooling_and_guards.md
+- [x] 00_foundation_scaffold.md
+- [x] 01_tooling_and_guards.md
 - [ ] 02_database_foundation.md
 - [ ] 03_domain_contracts.md
 - [ ] 04_authoring_schema.md
@@ -232,7 +233,7 @@ If blocked:
 
 ---
 
-### 2026-04-08 — Bootstrap and status foundation
+### 2026-04-08 â€” Bootstrap and status foundation
 - Prompt: `bootstrap_and_status_setup`
 - Status: completed
 - Summary:
@@ -252,3 +253,116 @@ If blocked:
 - Follow-up notes / risks:
   - Prompt files still need to be authored before execution can begin.
   - Prompt scope must stay tight to prevent false completion and architecture drift.
+
+### 2026-04-08 - Foundation scaffold
+- Prompt: `00_foundation_scaffold.md`
+- Status: completed
+- Summary:
+  - Created the initial Next.js + TypeScript project scaffold for Inkbranch v2.
+  - Established `src/app`, `src/core`, `src/data`, `src/ui`, and `src/lib` with placeholder-only module entry points.
+  - Added minimal route placeholders for `/`, `/reader`, `/studio`, and `/admin`.
+  - Added architecture docs and layer boundary README guard files.
+  - Configured and validated `@/` path aliases via `tsconfig.json`.
+- Files changed:
+  - `package.json`
+  - `tsconfig.json`
+  - `next-env.d.ts`
+  - `next.config.ts`
+  - `docs/architecture-overview.md`
+  - `docs/module-boundaries.md`
+  - `docs/rebuild-principles.md`
+  - `src/app/layout.tsx`
+  - `src/app/page.tsx`
+  - `src/app/globals.css`
+  - `src/app/(reader)/reader/page.tsx`
+  - `src/app/(studio)/studio/page.tsx`
+  - `src/app/(admin)/admin/page.tsx`
+  - `src/app/api/.gitkeep`
+  - `src/core/domain/README.md`
+  - `src/core/domain/types/index.ts`
+  - `src/core/domain/rules/index.ts`
+  - `src/core/domain/value-objects/index.ts`
+  - `src/core/planner/README.md`
+  - `src/core/planner/contracts/index.ts`
+  - `src/core/planner/services/index.ts`
+  - `src/core/planner/strategies/index.ts`
+  - `src/core/runtime/README.md`
+  - `src/core/runtime/contracts/index.ts`
+  - `src/core/runtime/services/index.ts`
+  - `src/core/runtime/projections/index.ts`
+  - `src/core/generator/README.md`
+  - `src/core/generator/contracts/index.ts`
+  - `src/core/generator/adapters/index.ts`
+  - `src/core/generator/prompts/index.ts`
+  - `src/core/validators/README.md`
+  - `src/core/validators/contracts/index.ts`
+  - `src/core/validators/rules/index.ts`
+  - `src/data/db/index.ts`
+  - `src/data/schema/index.ts`
+  - `src/data/queries/index.ts`
+  - `src/data/mutations/index.ts`
+  - `src/data/mappers/index.ts`
+  - `src/ui/shared/index.ts`
+  - `src/ui/reader/index.ts`
+  - `src/ui/studio/index.ts`
+  - `src/ui/admin/index.ts`
+  - `src/lib/constants/index.ts`
+  - `src/lib/env/index.ts`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `node -v`
+  - `npm -v`
+  - `npm install`
+  - `npm run typecheck`
+  - `npm run build`
+- Verification:
+  - Confirmed all required scaffold files exist via explicit `Test-Path` checks.
+  - Confirmed app build succeeded and generated `/`, `/reader`, `/studio`, and `/admin` routes.
+  - Confirmed TypeScript check passes with no errors.
+  - Confirmed no planner/runtime/generator feature logic was implemented beyond placeholders.
+- Follow-up notes / risks:
+  - Tooling guardrails (lint/format/test/layer rules) are not established yet and are deferred to `01_tooling_and_guards.md`.
+  - Data and core contracts are placeholders only and intentionally non-functional until later prompts.
+
+
+### 2026-04-08 - Tooling and architectural guardrails
+- Prompt: `01_tooling_and_guards.md`
+- Status: completed
+- Summary:
+  - Configured linting, formatting, test scaffolding, and a repeatable `verify` quality gate.
+  - Added architecture-focused import restrictions to protect `app`, `core`, `data`, `ui`, and `lib` boundaries.
+  - Added environment placeholder structure with a minimal env helper.
+  - Documented tooling expectations and guardrail intent for future prompts.
+- Files changed:
+  - `package.json`
+  - `package-lock.json`
+  - `eslint.config.mjs`
+  - `.prettierrc`
+  - `.prettierignore`
+  - `.editorconfig`
+  - `.env.example`
+  - `vitest.config.ts`
+  - `src/lib/env/index.ts`
+  - `tests/smoke/constants.test.ts`
+  - `docs/tooling-and-guards.md`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm install`
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:run`
+  - `npm run build`
+  - `npm run format`
+  - `npm run format:check`
+  - `npm run verify`
+- Verification:
+  - Confirmed ESLint runs directly (no `next lint`) and passes with import boundary restrictions active.
+  - Confirmed TypeScript no-emit check passes.
+  - Confirmed Vitest runs and passes the smoke test scaffold.
+  - Confirmed Prettier write/check scripts run successfully.
+  - Confirmed `verify` script successfully runs lint + typecheck + test:run + build.
+  - Confirmed route scaffold still builds successfully after tooling changes.
+- Follow-up notes / risks:
+  - Import restrictions are intentionally broad and may need finer-grained exceptions as orchestrator modules are introduced in later prompts.
+  - Local Node version (`v20.17.0`) shows an engine warning for one transitive ESLint dependency requiring `^20.19.0`; current tooling still executes successfully.
+  - Vitest currently reports a Vite CJS API deprecation warning; this is non-blocking for the current scaffold and can be addressed in later tooling refinement.

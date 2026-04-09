@@ -1,0 +1,36 @@
+:root {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  line-height: 1.4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f7f7f7;
+  color: #121212;
+}
+
+.page-shell {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem;
+}
+
+.route-nav {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.route-nav a {
+  color: #0d3b66;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.route-nav a:hover {
+  text-decoration: underline;
+}
