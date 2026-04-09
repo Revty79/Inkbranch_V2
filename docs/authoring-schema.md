@@ -49,6 +49,6 @@ Main truth fields (identity, keys, names, statuses, relationships) stay relation
 - `book_versions -> ending_rules`
 - `characters -> perspectives`
 
-## Deferred to prompt 05
+## Runtime relationship
 
-Runtime schema tables (chronicles, scene instances, choices, events, knowledge, and canon commits) are intentionally deferred to `05_runtime_schema.md`.
+Runtime tables and commit-state structures are documented in [Runtime Schema](runtime-schema.md).

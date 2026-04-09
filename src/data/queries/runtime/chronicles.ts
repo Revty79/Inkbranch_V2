@@ -1,6 +1,6 @@
 import "server-only";
 
-import { asc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 
 import {
   mapChronicleRow,
@@ -20,6 +20,16 @@ export async function getChronicleById(
     .where(eq(chronicles.id, chronicleId))
     .limit(1);
   return rows[0] ? mapChronicleRow(rows[0]) : null;
+}
+
+export async function listChronicles(limit = 50): Promise<ChronicleRecord[]> {
+  const rows = await db
+    .select()
+    .from(chronicles)
+    .orderBy(desc(chronicles.startedAt), desc(chronicles.createdAt))
+    .limit(limit);
+
+  return rows.map(mapChronicleRow);
 }
 
 export async function getPerspectiveRunsByChronicleId(

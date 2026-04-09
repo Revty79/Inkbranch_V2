@@ -72,11 +72,12 @@ A unit test suite in `tests/planner/planner-mvp.test.ts` validates deterministic
 
 ## Deliberate limitations
 
-Still deferred to later prompts:
+- Planner remains deterministic and intentionally non-LLM.
+- Advanced weighting/ranking and richer multi-perspective strategy are still future extension areas.
+- Planner continues to produce structure only; runtime/generator remain separate ownership areas.
 
-- runtime commit pipeline and event writes
-- generator rendering integration
-- reader route integration
-- advanced optimization and ranking
+See related implemented docs:
 
-This MVP is intended to be stable, inspectable, and sufficient for integration with runtime commit in prompt `11`.
+- [Runtime Commit Pipeline](runtime-commit-pipeline.md)
+- [Generator Integration](generator-integration.md)
+- [Reader Shell](reader-shell.md)

@@ -26,7 +26,7 @@ Must not own:
 
 - React rendering logic.
 - Direct route definitions.
-- Database-specific driver setup inside domain contracts.
+- Database-specific driver setup.
 
 ## Data layer (`src/data`)
 
@@ -40,7 +40,7 @@ Owns:
 Must not own:
 
 - UI rendering or route composition.
-- Story validity decisions that belong in planner/runtime contracts.
+- Story validity decisions that belong in planner/runtime/validator services.
 
 ## UI layer (`src/ui`)
 
@@ -54,15 +54,37 @@ Must not own:
 - Planner or runtime state mutation decisions.
 - Data persistence orchestration.
 
+## Validation layer (`src/core/validators`)
+
+Owns:
+
+- Structured guard contracts and issue/result shapes.
+- Continuity, legality, and projection consistency checks.
+- Blocking vs safe-degrade guard outcomes.
+
+Must not own:
+
+- Runtime state mutation.
+- UI rendering.
+- Planner scene generation.
+
 ## Examples of boundary crossing
 
 Good:
 
-- `app` calls a `core` planner service and passes results to `ui` components.
-- `core/runtime` uses `data` repositories to persist runtime events.
+- `app` composes data-query output and UI components for route rendering.
+- `data` adapters call `core` planner/runtime services using explicit contracts/stores.
+- `core` services remain persistence-agnostic and UI-agnostic.
 
 Bad:
 
 - `app` computes valid next scenes directly.
 - `ui` writes runtime commits.
-- `data` defines story progression rules.
+- `data` defines planner decision rules.
+- `core` imports `app` or `ui` modules.
+
+## Related docs
+
+- [Architecture Overview](architecture-overview.md)
+- [Rebuild Principles](rebuild-principles.md)
+- [Contributor Handoff](contributor-handoff.md)

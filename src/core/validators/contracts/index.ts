@@ -1,10 +1,12 @@
 export type {
-  ContinuityValidationResult,
-  EndingValidationResult,
-  RevealValidationResult,
-  ValidationIssue,
-  ValidationIssueCode,
-  ValidationResult,
-  ValidationSeverity,
-  ValidationSource
-} from "@/core/domain/types";
+  GuardDomain,
+  GuardIssue,
+  GuardIssueCode,
+  GuardSeverity
+} from "./issues";
+export {
+  createGuardResult,
+  mergeGuardResults,
+  type GuardValidationResult
+} from "./result";
+export type { GuardedValidation } from "./service";

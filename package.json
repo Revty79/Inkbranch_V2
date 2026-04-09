@@ -12,31 +12,38 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "test": "vitest",
-    "test:run": "vitest run",
-    "verify": "npm run lint && npm run typecheck && npm run test:run && npm run build",
+    "test:run": "vitest run tests/unit tests/integration",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "npm run seed:demo && playwright test",
+    "test:e2e:install": "playwright install chromium",
+    "verify": "npm run lint && npm run typecheck && npm run test:unit && npm run test:integration && npm run build && npm run test:e2e",
     "db:generate": "drizzle-kit generate --config drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config drizzle.config.ts",
     "db:studio": "drizzle-kit studio --config drizzle.config.ts",
-    "db:check": "tsx scripts/db-check.ts"
+    "db:check": "tsx scripts/db-check.ts",
+    "seed:demo": "tsx --require ./scripts/server-only-shim.cjs scripts/seed-demo.ts"
   },
   "dependencies": {
     "drizzle-orm": "^0.44.6",
     "next": "^15.0.0",
     "pg": "^8.16.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@types/node": "^22.10.1",
+    "@types/pg": "^8.15.6",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
-    "@types/pg": "^8.15.6",
+    "drizzle-kit": "^0.31.5",
     "eslint": "^9.16.0",
     "eslint-config-next": "^15.0.0",
-    "drizzle-kit": "^0.31.5",
     "prettier": "^3.4.2",
     "tsx": "^4.20.6",
-    "vitest": "^2.1.8",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
   }
 }

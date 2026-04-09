@@ -2,23 +2,47 @@
 
 ## Product direction
 
-Inkbranch v2 is a planner-led, book-first, world-first interactive fiction platform.
+Inkbranch v2 is planner-led, runtime-committed, and AI-on-rails.
 
-## Top-level layers
+It is explicitly not a beat-graph-first architecture.
 
-- `src/app`: Route entry points, layouts, and request orchestration.
-- `src/core`: Domain, planner, runtime, generator, and validation contracts and services.
-- `src/data`: Database integration, schema entry points, queries, mutations, and mappers.
-- `src/ui`: Presentational components only.
-- `src/lib`: Small shared constants and environment helpers.
+## Core flow
 
-## Core loop
+`authored truth -> planner scene package -> runtime commit -> reader/admin inspection -> next planner cycle`
 
-book bible -> planner -> scene package -> reader decision -> runtime state update -> next scene package
+## Layer ownership
 
-## Boundary intent
+- `src/app`: route-level orchestration and page entry points
+- `src/core`: domain contracts and engine behavior (planner/runtime/generator/validators)
+- `src/data`: DB schema, query/mutation modules, and persistence mappers/adapters
+- `src/ui`: presentational components only
+- `src/lib`: small shared helpers/constants/env access
 
-- Planner validity checks live in `core/planner`.
-- Runtime state transitions and projections live in `core/runtime` with data persistence in `data`.
-- Generator output is presentation-oriented and never treated as canonical truth.
-- UI renders and collects input, but does not decide validity.
+## Engine boundaries
+
+- Planner (`core/planner`) decides valid structural scene/choice packages.
+- Runtime (`core/runtime`) commits relational truth and projection/event updates.
+- Generator (`core/generator`) renders approved structure into prose/options only.
+- Validators (`core/validators`) guard continuity, legality, projection coherence, and generator safety boundaries.
+
+## Truth model
+
+- Authoring tables are authored source-of-truth.
+- Runtime truth is relational + event-log backed.
+- Generated prose is presentation, not canon.
+
+## Red lines
+
+1. Do not put planner/runtime/generator logic into UI.
+2. Do not let generator output become truth authority.
+3. Do not collapse runtime truth into an opaque JSON blob.
+4. Do not reintroduce beat-tree/beat-graph core progression.
+
+## Related docs
+
+- [Module Boundaries](module-boundaries.md)
+- [Rebuild Principles](rebuild-principles.md)
+- [Planner MVP](planner-mvp.md)
+- [Runtime Commit Pipeline](runtime-commit-pipeline.md)
+- [Generator Boundary](generator-boundary.md)
+- [Validation and Continuity Guards](validation-and-continuity-guards.md)

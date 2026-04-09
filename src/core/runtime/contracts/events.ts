@@ -10,7 +10,8 @@ export const RUNTIME_COMMIT_EVENT_TYPES = [
   "perspective_run_updated"
 ] as const;
 
-export type RuntimeCommitEventType = (typeof RUNTIME_COMMIT_EVENT_TYPES)[number];
+export type RuntimeCommitEventType =
+  (typeof RUNTIME_COMMIT_EVENT_TYPES)[number];
 
 export interface RuntimeCommitEventInput {
   readonly chronicleId: string;

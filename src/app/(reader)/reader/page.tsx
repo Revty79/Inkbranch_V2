@@ -1,15 +1,27 @@
+import Link from "next/link";
+
+import { ReaderEmptyState } from "@/ui/reader";
+
 export default function ReaderPage() {
   return (
-    <main className="page-shell">
-      <h1>Reader</h1>
+    <section className="reader-entry">
+      <h2>Reader Home</h2>
       <p>
-        Reader-facing surface for scene delivery and decision consumption from
-        planner-approved scene packages.
+        Reader routes present chronicle progress, committed scene instances, and
+        currently available choices.
       </p>
       <p>
-        This area must not decide story validity or mutate runtime state
-        directly.
+        Runtime commit and planner logic remain outside this UI shell. The
+        reader only displays committed state.
       </p>
-    </main>
+      <div className="reader-inline-links">
+        <Link href="/reader/chronicles">Browse chronicles</Link>
+      </div>
+      <ReaderEmptyState
+        title="No chronicle selected"
+        message="Open a chronicle from the list to view its summary and current scene."
+        action={<Link href="/reader/chronicles">Go to chronicles</Link>}
+      />
+    </section>
   );
 }

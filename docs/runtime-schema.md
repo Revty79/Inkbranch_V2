@@ -39,6 +39,6 @@ This separation keeps continuity auditable and avoids collapsing runtime into op
 `jsonb` is bounded to payload snapshots/config details (`planner_payload_json`, `generator_payload_json`, `resolution_payload_json`, etc.).
 Primary runtime facts remain relational.
 
-## Deferred to prompt 06
+## Data access relationship
 
-Queries, mutations, and repository/data-access boundaries are intentionally deferred to `06_data_access_boundaries.md`.
+Data-access query/mutation boundaries are documented in [Data Access Boundaries](data-access-boundaries.md).

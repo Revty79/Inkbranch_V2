@@ -7,9 +7,17 @@ export type RuntimeCommitIssueCode =
   | "scene-instance-not-found"
   | "scene-choice-not-found"
   | "scene-choice-disabled"
+  | "scene-choice-already-resolved"
+  | "scene-status-not-resolvable"
   | "choice-scene-mismatch"
   | "choice-chronicle-mismatch"
-  | "invalid-planner-package";
+  | "invalid-planner-package"
+  | "knowledge-state-contradiction"
+  | "canon-commit-contradiction"
+  | "reveal-not-allowed"
+  | "chronicle-projection-mismatch"
+  | "ending-transition-invalid"
+  | "validation-guard-failed";
 
 export type RuntimeCommitIssueSeverity = "info" | "warning" | "error";
 

@@ -1,4 +1,8 @@
-/**
- * Prompt template placeholder exports for generator adapters.
- */
-export const GENERATOR_PROMPT_PLACEHOLDER = "generator-prompt-placeholder";
+export { buildChoicePromptSection } from "./choices";
+export { buildScenePromptBundle } from "./scene";
+export {
+  buildGeneratorBoundarySystemPrompt,
+  SCENE_PROMPT_RESPONSE_CONTRACT,
+  type ScenePromptBundle,
+  type ScenePromptResponseContract
+} from "./shared";

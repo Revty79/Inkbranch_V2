@@ -55,16 +55,16 @@ Foundation rebuild
 - [x] 08_authoring_workflow_v1.md
 - [x] 09_planner_contracts.md
 - [x] 10_planner_mvp.md
-- [ ] 11_runtime_commit_pipeline.md
-- [ ] 12_reader_shell.md
-- [ ] 13_scene_package_rendering.md
-- [ ] 14_generator_boundary.md
-- [ ] 15_generator_integration.md
-- [ ] 16_admin_inspector.md
-- [ ] 17_validation_and_continuity_guards.md
-- [ ] 18_seed_data_and_demo_book.md
-- [ ] 19_tests_and_quality_gates.md
-- [ ] 20_docs_and_handoff.md
+- [x] 11_runtime_commit_pipeline.md
+- [x] 12_reader_shell.md
+- [x] 13_scene_package_rendering.md
+- [x] 14_generator_boundary.md
+- [x] 15_generator_integration.md
+- [x] 16_admin_inspector.md
+- [x] 17_validation_and_continuity_guards.md
+- [x] 18_seed_data_and_demo_book.md
+- [x] 19_tests_and_quality_gates.md
+- [x] 20_docs_and_handoff.md
 
 ## Prompt intent map
 
@@ -836,3 +836,619 @@ If blocked:
   - The prompt file includes malformed duplicated sections; implementation followed the explicit MVP requirements that were intact.
   - Deterministic rule ordering is intentionally simple in MVP and expected to deepen with future continuity/validation prompts.
   - Runtime commit behavior remains intentionally separate and deferred to `11_runtime_commit_pipeline.md`.
+
+
+### 2026-04-08 - Runtime commit pipeline
+- Prompt: `11_runtime_commit_pipeline.md`
+- Status: completed
+- Summary:
+  - Implemented a real runtime commit backbone with explicit Phase A scene instantiation and Phase B choice resolution orchestration.
+  - Added modular runtime services for scene instantiation, choice resolution, event append, knowledge updates, canon commit updates, chronicle projection refresh, and perspective projection refresh.
+  - Added runtime commit contracts and projection helpers to keep runtime behavior structural, deterministic, and inspectable.
+  - Added a DB-backed runtime commit store adapter in the data mutation layer to keep core runtime logic persistence-agnostic while still committing relational runtime truth.
+  - Added focused runtime tests validating instantiation, mismatch rejection, event append behavior, knowledge/canon updates, and projection refresh behavior.
+  - Added runtime commit pipeline documentation and updated runtime README boundaries.
+- Files changed:
+  - `docs/runtime-commit-pipeline.md`
+  - `src/core/runtime/README.md`
+  - `src/core/runtime/contracts/events.ts`
+  - `src/core/runtime/contracts/index.ts`
+  - `src/core/runtime/contracts/pipeline.ts`
+  - `src/core/runtime/contracts/ports.ts`
+  - `src/core/runtime/contracts/records.ts`
+  - `src/core/runtime/contracts/service.ts`
+  - `src/core/runtime/projections/index.ts`
+  - `src/core/runtime/projections/chronicle-state.ts`
+  - `src/core/runtime/projections/perspective-run.ts`
+  - `src/core/runtime/services/index.ts`
+  - `src/core/runtime/services/append-event.ts`
+  - `src/core/runtime/services/instantiate-scene.ts`
+  - `src/core/runtime/services/refresh-chronicle-state.ts`
+  - `src/core/runtime/services/resolve-choice.ts`
+  - `src/core/runtime/services/runtime-commit-pipeline.ts`
+  - `src/core/runtime/services/update-canon-commits.ts`
+  - `src/core/runtime/services/update-knowledge.ts`
+  - `src/core/runtime/services/update-perspective-run.ts`
+  - `src/data/mutations/runtime/index.ts`
+  - `src/data/mutations/runtime/runtime-commit-pipeline.ts`
+  - `tests/runtime/runtime-commit-pipeline.test.ts`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm run format`
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:run`
+  - `npm run format:check`
+  - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run build` (attempted multiple times; timed out under local `.next` lock from active dev server process)
+  - `rg -n "@/app|@/ui|@/data/db|drizzle-orm|\bpg\b" src/core/runtime`
+  - `rg -n "@/core/planner/services|@/core/generator" src/core/runtime`
+  - `rg -n "rendered prose|renderedProse|LLM|OpenAI|generator" src/core/runtime/services src/data/mutations/runtime/runtime-commit-pipeline.ts`
+  - `rg -n "scene_instantiated|scene_choices_created|choice_resolved|knowledge_state_updated|canon_commit_created|chronicle_state_refreshed|perspective_run_updated" src/core/runtime src/data/mutations/runtime/runtime-commit-pipeline.ts`
+  - `rg -n "@/data/db|@/data/mutations/runtime/runtime-commit-pipeline|createDatabaseRuntimeCommitPipeline" src/app src/ui`
+- Verification:
+  - Confirmed lint passes with architecture guardrails intact.
+  - Confirmed TypeScript compile passes with the new runtime contracts, services, projections, and data adapter.
+  - Confirmed focused runtime tests pass and cover instantiation, choice mismatch rejection, event append behavior, knowledge updates, canon commits, and projection refresh.
+  - Confirmed runtime core does not import UI or raw data layer internals directly.
+  - Confirmed runtime event typing and event append behavior use explicit stable event names.
+  - Confirmed generator/prose logic remains out of runtime commit orchestration.
+  - Build command could not complete in this session due persistent `.next` lock contention from an already-running local `next dev` process; this was logged and isolated from runtime pipeline correctness checks.
+- Follow-up notes / risks:
+  - Structural effect mapping is intentionally simple MVP logic and will need deeper continuity/validation rules in later prompts.
+  - Chronicle and perspective projection summaries are explicit but still compact; richer projection detail can expand in admin/validation prompts.
+  - Reader-facing submission flow remains intentionally deferred to `12_reader_shell.md`.
+  - Prose generation remains intentionally separate and deferred to generator prompts.
+
+
+### 2026-04-08 - Reader shell
+- Prompt: `12_reader_shell.md`
+- Status: completed
+- Summary:
+  - Implemented the Reader shell layout and chronicle-centered route flow for reader entry, chronicle listing, chronicle summary, and current scene viewing.
+  - Added reusable Reader UI modules under `src/ui/reader` for shell layout, chronicle cards/summary/progress, scene frame/meta/placeholders, choice presentation, and shared empty/error/status helpers.
+  - Wired Reader routes to runtime query modules so pages are data-backed while keeping page files thin and server-first.
+  - Added loading, not-found, and error route surfaces for clean reader-state handling.
+  - Added focused reader shell component tests and documentation for Reader scope and boundaries.
+- Files changed:
+  - `docs/reader-shell.md`
+  - `src/app/(reader)/reader/layout.tsx`
+  - `src/app/(reader)/reader/page.tsx`
+  - `src/app/(reader)/reader/loading.tsx`
+  - `src/app/(reader)/reader/error.tsx`
+  - `src/app/(reader)/reader/not-found.tsx`
+  - `src/app/(reader)/reader/chronicles/page.tsx`
+  - `src/app/(reader)/reader/chronicles/loading.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/page.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/loading.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/not-found.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/error.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/scene/page.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/scene/loading.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/scene/error.tsx`
+  - `src/ui/reader/index.ts`
+  - `src/ui/reader/layout/ReaderHeader.tsx`
+  - `src/ui/reader/layout/ReaderNav.tsx`
+  - `src/ui/reader/layout/ReaderShell.tsx`
+  - `src/ui/reader/chronicle/ChronicleCard.tsx`
+  - `src/ui/reader/chronicle/ChronicleList.tsx`
+  - `src/ui/reader/chronicle/ChronicleSummary.tsx`
+  - `src/ui/reader/chronicle/ProgressPanel.tsx`
+  - `src/ui/reader/scene/ChoiceCard.tsx`
+  - `src/ui/reader/scene/ChoiceList.tsx`
+  - `src/ui/reader/scene/SceneFrame.tsx`
+  - `src/ui/reader/scene/SceneMeta.tsx`
+  - `src/ui/reader/scene/ScenePlaceholder.tsx`
+  - `src/ui/reader/shared/ReaderEmptyState.tsx`
+  - `src/ui/reader/shared/ReaderErrorState.tsx`
+  - `src/ui/reader/shared/PerspectiveBadge.tsx`
+  - `src/ui/reader/shared/ReaderStatusBadge.tsx`
+  - `src/data/queries/runtime/chronicles.ts`
+  - `src/data/queries/runtime/scenes.ts`
+  - `src/app/globals.css`
+  - `tests/reader/reader-shell-ui.test.tsx`
+  - `vitest.config.ts`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm run format`
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:run`
+  - `npm run format:check`
+  - `rg -n "@/data/db|@/data/queries|@/data/mutations" src/ui/reader`
+  - `rg -n "@/core/planner/services|@/core/runtime/services|@/core/generator" 'src/app/(reader)/reader' src/ui/reader`
+  - `rg -n "beat|graph|node|edge" 'src/app/(reader)/reader' src/ui/reader`
+- Verification:
+  - Confirmed lint and typecheck pass with Reader route/UI additions.
+  - Confirmed reader shell tests pass and include empty state, chronicle summary rendering, and scene placeholder rendering coverage.
+  - Confirmed Reader route structure exists for landing, chronicle listing, chronicle summary, and current-scene surfaces.
+  - Confirmed Reader pages use runtime query boundaries and do not import runtime/planner/generator service internals.
+  - Confirmed no raw DB imports exist in Reader UI components.
+  - Confirmed loading, not-found, and error route surfaces are implemented.
+- Follow-up notes / risks:
+  - Scene presentation intentionally remains structural-first when prose is unavailable; deeper scene rendering is deferred to `13_scene_package_rendering.md`.
+  - Reader interaction remains display-focused in this prompt; full choice submission UX stays thin/deferred until later integration prompts.
+  - Generator integration remains separate and deferred to `14` and `15`.
+
+
+### 2026-04-08 - Scene package rendering
+- Prompt: `13_scene_package_rendering.md`
+- Status: completed
+- Summary:
+  - Implemented a runtime-to-reader scene presentation mapper that transforms committed scene + choice records into a reader-safe scene model.
+  - Added explicit scene composition with `SceneHeader`, `SceneBody`, `SceneFallbackBody`, `SceneMeta`, and refined choice rendering.
+  - Implemented clear body precedence: committed prose when present, structural fallback body when prose is absent.
+  - Updated the current scene route to stay thin by mapping runtime data first and rendering through reusable scene components.
+  - Added rendering-focused tests for prose precedence, fallback rendering, and enabled/disabled choice presentation.
+  - Documented scene package rendering ownership and boundaries ahead of generator boundary prompts.
+- Files changed:
+  - `docs/scene-package-rendering.md`
+  - `src/data/mappers/reader-scene.ts`
+  - `src/data/mappers/index.ts`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/scene/page.tsx`
+  - `src/ui/reader/index.ts`
+  - `src/ui/reader/scene/SceneFrame.tsx`
+  - `src/ui/reader/scene/SceneHeader.tsx`
+  - `src/ui/reader/scene/SceneBody.tsx`
+  - `src/ui/reader/scene/SceneFallbackBody.tsx`
+  - `src/ui/reader/scene/SceneMeta.tsx`
+  - `src/ui/reader/scene/ChoiceList.tsx`
+  - `src/ui/reader/scene/ChoiceCard.tsx`
+  - `src/ui/reader/scene/ScenePlaceholder.tsx`
+  - `src/app/globals.css`
+  - `tests/reader/scene-package-rendering.test.ts`
+  - `tests/reader/reader-shell-ui.test.tsx`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm run format`
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:run`
+  - `npm run format:check`
+  - `rg -n "@/data/db|@/data/queries|@/data/mutations" src/ui/reader`
+  - `rg -n "@/core/planner/services|@/core/runtime/services|@/core/generator" 'src/app/(reader)/reader' src/ui/reader src/data/mappers/reader-scene.ts`
+  - `rg -n "plannerPayload|generatorPayload|payloadJson|JSON" 'src/app/(reader)/reader/chronicles/[chronicleId]/scene/page.tsx' src/ui/reader src/data/mappers/reader-scene.ts`
+  - `rg -n 'mode: "prose"|mode: "fallback"|SceneFallbackBody|mapRuntimeSceneForReader' src/data/mappers/reader-scene.ts src/ui/reader/scene tests/reader`
+- Verification:
+  - Confirmed lint and typecheck pass after rendering-layer refactor.
+  - Confirmed rendering-focused tests pass for prose precedence, fallback behavior, and choice availability mapping.
+  - Confirmed scene route composes through the mapper + reusable scene components rather than inline rendering logic.
+  - Confirmed no raw DB imports exist in Reader UI components.
+  - Confirmed planner/runtime commit/generator service internals are not imported into reader rendering components.
+  - Confirmed raw planner/generator payload objects are not displayed as main scene body content.
+- Follow-up notes / risks:
+  - Structural fallback copy is intentionally simple and honest; literary prose quality remains for generator integration prompts.
+  - Scene metadata presentation is intentionally lightweight to avoid turning Reader into an engine dashboard.
+  - Generator boundary and AI generation remain intentionally deferred to `14_generator_boundary.md` and `15_generator_integration.md`.
+
+
+### 2026-04-08 - Generator boundary
+- Prompt: `14_generator_boundary.md`
+- Status: completed
+- Summary:
+  - Implemented the formal generator boundary as a provider-agnostic, schema-first presentation layer.
+  - Added explicit generator contracts for approved scene input, structured generated output, diagnostics, and success/failure/fallback result envelopes.
+  - Added prompt builders, output validation, fallback construction, and generator orchestration that never mutates planner/runtime truth.
+  - Added a deterministic mock adapter for non-provider development/test flow and focused generator-boundary tests.
+  - Documented the boundary in generator-layer docs and `docs/generator-boundary.md`.
+- Files changed:
+  - `src/core/generator/contracts/input.ts`
+  - `src/core/generator/contracts/output.ts`
+  - `src/core/generator/contracts/issues.ts`
+  - `src/core/generator/contracts/result.ts`
+  - `src/core/generator/contracts/service.ts`
+  - `src/core/generator/contracts/index.ts`
+  - `src/core/generator/adapters/base.ts`
+  - `src/core/generator/adapters/mock.ts`
+  - `src/core/generator/adapters/index.ts`
+  - `src/core/generator/prompts/shared.ts`
+  - `src/core/generator/prompts/choices.ts`
+  - `src/core/generator/prompts/scene.ts`
+  - `src/core/generator/prompts/index.ts`
+  - `src/core/generator/validators/output.ts`
+  - `src/core/generator/validators/index.ts`
+  - `src/core/generator/services/fallback.ts`
+  - `src/core/generator/services/generate-scene.ts`
+  - `src/core/generator/services/index.ts`
+  - `src/core/generator/README.md`
+  - `docs/generator-boundary.md`
+  - `tests/generator/generator-boundary.test.ts`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm run typecheck`
+  - `npm run lint`
+  - `npm run test:run`
+  - `npm run format`
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:run`
+  - `npm run format:check`
+  - `rg -n "@/app|@/ui|@/data" src/core/generator -g "*.ts"`
+  - `rg -n "planNextScene|instantiateScene|resolveChoice|createCanonCommit|appendRuntimeEvent|db|drizzle|pg" src/core/generator -g "*.ts"`
+  - `rg -n "scenePackage|plannerPayload|generatorPayload" src/core/generator -g "*.ts"`
+- Verification:
+  - Confirmed lint, typecheck, tests, and format checks pass after generator boundary implementation.
+  - Confirmed generator output validation accepts valid schema-aligned payloads and rejects invalid payloads into explicit fallback envelopes.
+  - Confirmed mock adapter path produces valid structured output through the same orchestration and validation boundary.
+  - Confirmed prompt builders consume approved generator input fields and include explicit anti-story-control instructions.
+  - Confirmed no forbidden `app/ui/data` imports or runtime/planner mutation logic were introduced in generator core modules.
+- Follow-up notes / risks:
+  - Live provider integration remains intentionally deferred to `15_generator_integration.md`.
+  - Fallback prose is intentionally structural and honest; quality/tone refinement is expected to deepen once live integration is active.
+  - Adapter-level timeout and provider-specific retry policies are intentionally deferred to prompt `15`.
+
+
+### 2026-04-08 - Generator integration
+- Prompt: `15_generator_integration.md`
+- Status: completed
+- Summary:
+  - Integrated a live OpenAI adapter behind the established generator boundary while keeping the app provider-agnostic through configured generator services.
+  - Added server-side env wiring for provider selection and generation enablement, including explicit missing-key handling when `openai` is requested.
+  - Implemented structured OpenAI generation requests, adapter parsing, validation enforcement, and fallback continuity through existing generator result envelopes.
+  - Connected generator output into the reader scene flow in a bounded server-side path without mutating runtime truth.
+  - Added focused integration tests for adapter selection, live-adapter parsing, invalid-output fallback, and mock-path behavior.
+- Files changed:
+  - `.env.example`
+  - `src/lib/env/index.ts`
+  - `src/core/generator/adapters/openai.ts`
+  - `src/core/generator/adapters/index.ts`
+  - `src/core/generator/services/configured-service.ts`
+  - `src/core/generator/services/index.ts`
+  - `src/core/generator/README.md`
+  - `src/data/mappers/generator-scene.ts`
+  - `src/data/mappers/index.ts`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/scene/page.tsx`
+  - `docs/generator-integration.md`
+  - `tests/generator/generator-integration.test.ts`
+  - `vitest.config.ts`
+  - `tests/stubs/server-only.ts`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm run typecheck`
+  - `npm run lint`
+  - `npm run test:run` (initially failed due Vitest not resolving `server-only`; fixed with test alias stub and reran)
+  - `npm run format`
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:run`
+  - `npm run format:check`
+  - `rg -n "openai|OPENAI_API_KEY|Authorization: \`Bearer|/responses" src/app src/ui`
+  - `rg -n "createOpenAiSceneGenerationAdapter|openai.ts|/responses|server-only" src/core/generator`
+  - `rg -n "GENERATOR_PROVIDER|GENERATOR_ENABLED|OPENAI_MODEL|OPENAI_BASE_URL" .env.example src/lib/env src/core/generator/services/configured-service.ts`
+- Verification:
+  - Confirmed lint, typecheck, tests, and format checks pass after live integration changes.
+  - Confirmed env-based runtime configuration resolves provider and generation mode with explicit handling for missing OpenAI key.
+  - Confirmed live adapter path parses structured OpenAI output and returns adapter results through the boundary.
+  - Confirmed invalid live output is rejected into structured fallback (`validation-failed`) via generator orchestration.
+  - Confirmed mock/noop path remains available and passes focused integration tests.
+  - Confirmed no OpenAI/provider call code was introduced into UI components, and provider integration remains server-side.
+- Follow-up notes / risks:
+  - OpenAI prompt/model tuning is intentionally minimal in this prompt and expected to evolve.
+  - Reader integration currently performs on-demand generation for scenes without committed prose; persistence/inspection of generation outputs remains for later admin/inspection workflows.
+  - Advanced retry/backoff and usage analytics are intentionally deferred.
+
+
+### 2026-04-08 - Admin inspector
+- Prompt: `16_admin_inspector.md`
+- Status: completed
+- Summary:
+  - Implemented a chronicle-centered Admin Inspector route tree with shared layout and read-only inspection pages for state, scenes, choices/resolutions, events, knowledge, commits, and generation markers.
+  - Added reusable admin UI modules under `src/ui/admin` for shell/navigation, chronicle summaries, scene/choice inspection, event/knowledge/commit views, generation panels, and shared inspector primitives.
+  - Added admin-focused data query coverage for choice resolutions by chronicle/scene and used query-layer access only in admin routes.
+  - Added focused admin inspector UI tests and documentation clarifying purpose, route coverage, and read-only boundaries.
+- Files changed:
+  - `src/app/(admin)/admin/layout.tsx`
+  - `src/app/(admin)/admin/page.tsx`
+  - `src/app/(admin)/admin/chronicles/page.tsx`
+  - `src/app/(admin)/admin/chronicles/[chronicleId]/_lib/context.ts`
+  - `src/app/(admin)/admin/chronicles/[chronicleId]/page.tsx`
+  - `src/app/(admin)/admin/chronicles/[chronicleId]/state/page.tsx`
+  - `src/app/(admin)/admin/chronicles/[chronicleId]/scenes/page.tsx`
+  - `src/app/(admin)/admin/chronicles/[chronicleId]/scenes/[sceneInstanceId]/page.tsx`
+  - `src/app/(admin)/admin/chronicles/[chronicleId]/events/page.tsx`
+  - `src/app/(admin)/admin/chronicles/[chronicleId]/knowledge/page.tsx`
+  - `src/app/(admin)/admin/chronicles/[chronicleId]/commits/page.tsx`
+  - `src/app/(admin)/admin/chronicles/[chronicleId]/generation/page.tsx`
+  - `src/ui/admin/layout/AdminShell.tsx`
+  - `src/ui/admin/layout/AdminHeader.tsx`
+  - `src/ui/admin/layout/AdminNav.tsx`
+  - `src/ui/admin/chronicles/ChronicleList.tsx`
+  - `src/ui/admin/chronicles/ChronicleCard.tsx`
+  - `src/ui/admin/chronicles/ChronicleSummary.tsx`
+  - `src/ui/admin/chronicles/ChronicleStatePanel.tsx`
+  - `src/ui/admin/chronicles/PerspectiveRunList.tsx`
+  - `src/ui/admin/chronicles/ChronicleInspectorNav.tsx`
+  - `src/ui/admin/scenes/SceneInstanceList.tsx`
+  - `src/ui/admin/scenes/SceneInstanceCard.tsx`
+  - `src/ui/admin/scenes/SceneInstanceDetail.tsx`
+  - `src/ui/admin/scenes/SceneChoiceList.tsx`
+  - `src/ui/admin/scenes/ChoiceResolutionPanel.tsx`
+  - `src/ui/admin/events/EventLogList.tsx`
+  - `src/ui/admin/events/EventLogEntry.tsx`
+  - `src/ui/admin/knowledge/KnowledgeStateList.tsx`
+  - `src/ui/admin/knowledge/KnowledgeStateCard.tsx`
+  - `src/ui/admin/commits/CanonCommitList.tsx`
+  - `src/ui/admin/commits/CanonCommitCard.tsx`
+  - `src/ui/admin/generation/GenerationResultPanel.tsx`
+  - `src/ui/admin/generation/GenerationFallbackPanel.tsx`
+  - `src/ui/admin/shared/InspectorEmptyState.tsx`
+  - `src/ui/admin/shared/InspectorErrorState.tsx`
+  - `src/ui/admin/shared/InspectorMetaTable.tsx`
+  - `src/ui/admin/shared/InspectorStatusBadge.tsx`
+  - `src/ui/admin/index.ts`
+  - `src/data/queries/runtime/scenes.ts`
+  - `src/app/globals.css`
+  - `docs/admin-inspector.md`
+  - `tests/admin/admin-inspector-ui.test.tsx`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm run typecheck` (initial run caught tuple typing in `admin/chronicles/page.tsx`; fixed and reran)
+  - `npm run lint`
+  - `npm run test:run`
+  - `npm run format`
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:run`
+  - `npm run format:check`
+  - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run build` (timed out due active local `next dev` lock)
+  - `Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'node.exe' } ...` (confirmed active `next dev` plus timed-out build processes)
+  - `Stop-Process -Id 18684,23080,17920,22044 -Force` (cleaned up stuck build processes only)
+  - `rg -n "@/data/db|drizzle-orm|@/data/schema" src/ui/admin 'src/app/(admin)/admin'`
+  - `rg -n "@/core/planner/services|@/core/runtime/services|@/core/generator/adapters" src/ui/admin 'src/app/(admin)/admin'`
+  - `rg --files 'src/app/(admin)/admin/chronicles'`
+  - `rg -n "\\b(create|update|delete|insert|mutate|mutation)\\b" 'src/app/(admin)/admin' -g '*.tsx'`
+- Verification:
+  - Confirmed lint, typecheck, tests, and format checks pass with the new admin inspector surfaces.
+  - Confirmed chronicle list, chronicle summary hub, and each chronicle sub-route (`state`, `scenes`, scene detail, `events`, `knowledge`, `commits`, `generation`) are implemented and data-backed via query modules.
+  - Confirmed choice-resolution inspection is available per scene through new runtime query helpers.
+  - Confirmed no raw DB/schema imports leaked into `src/ui/admin` or admin page files.
+  - Confirmed admin remains read-only in this prompt (no runtime/planner/generator mutation controls introduced).
+  - Build verification could not complete in this session due existing local `next dev` lock contention; all non-build quality gates passed.
+- Follow-up notes / risks:
+  - Payload detail uses expandable JSON blocks and stays secondary to shaped summaries; this can deepen incrementally with future needs.
+  - Generation inspection currently reflects runtime scene markers (`renderedProse`, `generatorPayload`) and does not include provider-level prompt diagnostics by design.
+  - Continuity/validation hardening remains intentionally deferred to `17_validation_and_continuity_guards.md`.
+
+
+### 2026-04-08 - Validation and continuity guards
+- Prompt: `17_validation_and_continuity_guards.md`
+- Status: completed
+- Summary:
+  - Implemented a real continuity guard layer across planner scene validation, reveal legality, runtime transition safety, knowledge/canon consistency, chronicle projection coherence, ending safety, and generator truth-boundary safety.
+  - Integrated validators into real runtime and generator execution paths so guard checks run before commits and before generated output is accepted.
+  - Added structured guard contracts with machine-readable issue codes, severity, blocking, and fallback-allowed semantics.
+  - Added focused continuity tests that block contradictory reveal sets, illegal reveals, invalid choice transitions, contradictory canon commits, knowledge regressions, premature ending eligibility, and projection mismatches while enforcing safe generator fallback behavior.
+  - Documented guard-layer ownership, runtime touchpoints, and safe-degrade vs hard-block behavior.
+- Files changed:
+  - `src/core/validators/contracts/issues.ts`
+  - `src/core/validators/contracts/result.ts`
+  - `src/core/validators/contracts/service.ts`
+  - `src/core/validators/contracts/index.ts`
+  - `src/core/validators/rules/planner-scene.ts`
+  - `src/core/validators/rules/reveals.ts`
+  - `src/core/validators/rules/runtime-instantiation.ts`
+  - `src/core/validators/rules/choice-resolution.ts`
+  - `src/core/validators/rules/knowledge.ts`
+  - `src/core/validators/rules/canon-commits.ts`
+  - `src/core/validators/rules/chronicle-state.ts`
+  - `src/core/validators/rules/endings.ts`
+  - `src/core/validators/rules/generator-safety.ts`
+  - `src/core/validators/rules/index.ts`
+  - `src/core/validators/services/validate-planner-scene.ts`
+  - `src/core/validators/services/validate-reveal-usage.ts`
+  - `src/core/validators/services/validate-runtime-transition.ts`
+  - `src/core/validators/services/validate-canon-commit.ts`
+  - `src/core/validators/services/validate-ending-eligibility.ts`
+  - `src/core/validators/services/validate-generator-output.ts`
+  - `src/core/validators/services/index.ts`
+  - `src/core/validators/README.md`
+  - `src/core/runtime/contracts/issues.ts`
+  - `src/core/runtime/contracts/ports.ts`
+  - `src/core/runtime/services/resolve-choice.ts`
+  - `src/core/runtime/services/runtime-commit-pipeline.ts`
+  - `src/core/generator/services/generate-scene.ts`
+  - `src/data/mutations/runtime/runtime-commit-pipeline.ts`
+  - `tests/runtime/runtime-commit-pipeline.test.ts`
+  - `tests/validators/continuity-guards.test.ts`
+  - `docs/validation-and-continuity-guards.md`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:run -- tests/validators/continuity-guards.test.ts`
+  - `npm run test:run -- tests/runtime/runtime-commit-pipeline.test.ts` (initially failed after new ending guard; updated fixture to use `development` scene and reran)
+  - `npm run test:run -- tests/generator/generator-integration.test.ts`
+  - `npm run test:run`
+  - `npm run format:check` (initially failed)
+  - `npx prettier --write src/core/runtime/services/runtime-commit-pipeline.ts src/core/validators/rules/generator-safety.ts src/core/validators/rules/index.ts src/core/validators/rules/planner-scene.ts src/core/validators/rules/reveals.ts src/core/validators/services/validate-runtime-transition.ts tests/validators/continuity-guards.test.ts`
+  - `npm run format:check`
+  - `rg -n "@/app|@/ui|@/data" src/core/validators -g "*.ts"`
+  - `rg -n "@/core/validators/services" src/core/runtime src/core/generator -g "*.ts"`
+  - `rg -n "@/core/validators" src/app src/ui -g "*.ts" -g "*.tsx"`
+  - `rg -n "validatePlannerScenePackage|validateRuntimeInstantiationInput|validateRevealUsage|validateKnowledgeUpdateInput|validateCanonCommitEffectsInput|validateChronicleProjectionInput|validateEndingTransition" src/core/runtime/services/runtime-commit-pipeline.ts`
+- Verification:
+  - Confirmed lint, typecheck, full test suite, and format check pass.
+  - Confirmed focused guard tests pass for illegal reveals, contradictory allowed/blocked reveals, invalid choice resolution, contradictory canon commit, knowledge regression, premature ending eligibility, projection mismatch, and invalid generator output fallback.
+  - Confirmed planner package validation and runtime instantiation guards run before scene instantiation commits.
+  - Confirmed reveal, ending, knowledge, canon, and chronicle projection guards run in runtime choice resolution flow before committing side effects.
+  - Confirmed generator output safety guard runs after schema validation and falls back safely on invalid output.
+  - Confirmed no `app/ui/data` imports were introduced in validator core modules and no validator logic leaked into route/UI components.
+- Follow-up notes / risks:
+  - Current guard checks focus on explicit high-value continuity contradictions and are intentionally bounded MVP logic, not a generic policy engine.
+  - Canon commit contradiction checks currently use key/value coherence and can deepen later with richer authored-canon cross-reference rules.
+  - Chronicle projection validation currently catches structural drift/mismatch and can expand toward deeper event-history reconciliation in later phases.
+  - Seed/demo world data remains intentionally deferred to `18_seed_data_and_demo_book.md`.
+
+
+### 2026-04-08 - Seed data and demo book
+- Prompt: `18_seed_data_and_demo_book.md`
+- Status: completed
+- Summary:
+  - Seeded one coherent demo world/book/version package (`Brinebound Meridian` / `Last Light at Meridian Gate` / `demo-v1`) with meaningful authored truth for planner-led flow.
+  - Added realistic demo entities, canon, perspectives, milestones, reveal rules, pacing rules, and ending rules in dedicated seed modules.
+  - Implemented an executable runtime bootstrap (`seed:demo`) that resets the demo chronicle, runs planner + runtime commit pipeline, resolves one structural choice, and instantiates the next scene for Reader/Admin inspection.
+  - Added demo seed documentation (`docs/demo-book.md`, `docs/seed-data.md`) and focused seed package tests.
+  - Verified seeded content is present and usable across planner/runtime/query paths with concrete DB and service checks.
+- Files changed:
+  - `package.json`
+  - `package-lock.json`
+  - `scripts/seed-demo.ts`
+  - `scripts/server-only-shim.cjs`
+  - `src/data/seeds/demo-world.ts`
+  - `src/data/seeds/demo-entities.ts`
+  - `src/data/seeds/demo-canon.ts`
+  - `src/data/seeds/demo-planning.ts`
+  - `src/data/seeds/demo-runtime.ts`
+  - `src/data/seeds/index.ts`
+  - `docs/demo-book.md`
+  - `docs/seed-data.md`
+  - `tests/seeds/demo-seed-data.test.ts`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm run typecheck`
+  - `npm run lint`
+  - `npm run test:run -- tests/seeds/demo-seed-data.test.ts`
+  - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run seed:demo` (initially failed: missing/throwing `server-only`, then resolved with shim + script update; later failed once on canon uniqueness and was fixed)
+  - `npm install server-only`
+  - `npx prettier --write docs/demo-book.md docs/seed-data.md scripts/seed-demo.ts scripts/server-only-shim.cjs src/data/seeds/demo-entities.ts src/data/seeds/demo-planning.ts src/data/seeds/demo-runtime.ts src/data/seeds/demo-world.ts src/data/seeds/index.ts tests/seeds/demo-seed-data.test.ts`
+  - `npm run format:check`
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:run`
+  - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run seed:demo` (final successful run)
+  - DB verification via `node` + `pg` row-count query for world/book/version/authoring/runtime tables
+  - Planner verification via `tsx --require ./scripts/server-only-shim.cjs` using `planNextSceneForChronicle(...)`
+  - Reader/Admin query-path verification via `tsx --require ./scripts/server-only-shim.cjs` using runtime query modules
+  - `rg -n "@/app|@/ui" src/data/seeds scripts/seed-demo.ts`
+  - `rg -n "beat-graph|beat graph|node tree|scene tree|next-node" src/data/seeds docs/demo-book.md docs/seed-data.md scripts/seed-demo.ts`
+- Verification:
+  - Confirmed lint, typecheck, focused seed tests, full test suite, and format check all pass.
+  - Confirmed `seed:demo` runs successfully against local DB and prints usable Reader/Admin chronicle routes.
+  - Confirmed seeded authoring data exists with expected counts (world=1, book=1, active version=1, canon=12, characters=5, perspectives=2, milestones=6, reveals=4, endings=3).
+  - Confirmed runtime bootstrap exists and works (chronicle created, 2 scene instances, 1 choice resolution, event log entries, current scene pointer present).
+  - Confirmed planner operates on seeded runtime context and produces valid scene package output for the demo chronicle.
+  - Confirmed Reader/Admin query paths load seeded chronicle state, current scene, choices, and event history.
+  - Confirmed no forbidden `app/ui` imports were introduced in seed modules or scripts, and no beat-graph-first seed structure was introduced.
+- Follow-up notes / risks:
+  - Demo package scope is intentionally compact and deterministic for inspectability, not full-content breadth.
+  - Seed script uses a scoped `server-only` shim for CLI execution paths while preserving app-layer architecture boundaries.
+  - Runtime bootstrap currently exercises one resolution plus next-scene instantiation; deeper multi-cycle automation can be expanded later if needed.
+  - Final quality-gate hardening remains for `19_tests_and_quality_gates.md`.
+
+
+### 2026-04-08 - Tests and quality gates
+- Prompt: `19_tests_and_quality_gates.md`
+- Status: completed
+- Summary:
+  - Implemented an explicit three-layer test strategy with clear structure: `tests/unit`, `tests/integration`, and `tests/e2e`.
+  - Added meaningful integration seam coverage for planner-to-runtime handoff and seed bootstrap coherence in addition to existing runtime/generator/reader/admin integration checks.
+  - Added targeted Playwright E2E coverage for Studio load, Reader demo chronicle load, Admin chronicle inspection load, and a focused Reader navigation flow.
+  - Added/normalized quality-gate scripts (`test:unit`, `test:integration`, `test:e2e`, `verify`) and validated a full end-to-end verify path.
+  - Documented the testing strategy, command contract, and seed/bootstrap role in `docs/testing-and-quality-gates.md`.
+- Files changed:
+  - `package.json`
+  - `package-lock.json`
+  - `playwright.config.ts`
+  - `docs/testing-and-quality-gates.md`
+  - `tests/e2e/demo-fixture.ts`
+  - `tests/e2e/studio.spec.ts`
+  - `tests/e2e/reader.spec.ts`
+  - `tests/e2e/admin.spec.ts`
+  - `tests/e2e/demo-flow.spec.ts`
+  - `tests/unit/planner/planner-mvp.test.ts` (moved)
+  - `tests/unit/validators/continuity-guards.test.ts` (moved)
+  - `tests/unit/generator/generator-boundary.test.ts` (moved)
+  - `tests/unit/reader/scene-package-rendering.test.ts` (moved)
+  - `tests/unit/smoke/constants.test.ts` (moved)
+  - `tests/unit/seeds/demo-seed-data.test.ts` (moved)
+  - `tests/integration/runtime/runtime-commit-pipeline.test.ts` (moved)
+  - `tests/integration/generator/generator-integration.test.ts` (moved)
+  - `tests/integration/reader/reader-shell-ui.test.tsx` (moved)
+  - `tests/integration/admin/admin-inspector-ui.test.tsx` (moved)
+  - `tests/integration/planner-runtime/planner-runtime-handoff.test.ts`
+  - `tests/integration/seed/seed-bootstrap-coherence.test.ts`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm install -D @playwright/test`
+  - `npm run test:e2e:install`
+  - `npm run format:check` (initially failed)
+  - `npx prettier --write docs/testing-and-quality-gates.md playwright.config.ts tests/e2e/admin.spec.ts tests/e2e/demo-fixture.ts tests/e2e/demo-flow.spec.ts tests/e2e/reader.spec.ts tests/e2e/studio.spec.ts tests/integration/planner-runtime/planner-runtime-handoff.test.ts tests/integration/seed/seed-bootstrap-coherence.test.ts`
+  - `npm run format:check`
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:unit`
+  - `npm run test:integration`
+  - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run test:e2e` (initially timed out due stale `next dev` processes)
+  - `Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'node.exe' } ...` (identified stale dev server processes)
+  - `Stop-Process -Id ... -Force` (cleaned stale `next dev`/Next server processes)
+  - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run test:e2e` (rerun successful)
+  - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run verify` (full gate successful)
+  - `rg -n "@/app|@/ui|@/data" src/core -g "*.ts"`
+  - `rg -n "@/app|@/ui" src/data/seeds scripts/seed-demo.ts`
+  - `rg -n "test:unit|test:integration|test:e2e|verify" package.json`
+- Verification:
+  - Confirmed lint and typecheck pass after test-structure and script updates.
+  - Confirmed unit tests pass (`tests/unit`), including planner/runtime-adjacent validators/generator/rendering/seed package checks.
+  - Confirmed integration tests pass (`tests/integration`), including runtime pipeline, generator integration, planner-runtime seam, and seed bootstrap coherence.
+  - Confirmed Playwright E2E suite passes for Studio, Reader demo chronicle, Admin chronicle inspection, and demo Reader flow.
+  - Confirmed `verify` passes with the full configured gate: lint + typecheck + unit + integration + build + e2e.
+  - Confirmed demo seed/bootstrap remains usable because `test:e2e` executes `seed:demo` before browser checks.
+  - Confirmed no forbidden app/ui imports were introduced into core/seed script boundaries in this prompt’s changes.
+- Follow-up notes / risks:
+  - E2E coverage is intentionally scoped to highest-value routes/flows, not an exhaustive browser suite.
+  - E2E and verify assume a reachable local Postgres demo DB (`DATABASE_URL`) and Chromium install.
+  - A stale-local-dev-process timeout can affect web server startup; reruns are stable after process cleanup.
+  - Final documentation and handoff consolidation remains for `20_docs_and_handoff.md`.
+
+
+### 2026-04-08 - Docs and handoff
+- Prompt: `20_docs_and_handoff.md`
+- Status: completed
+- Summary:
+  - Finalized the documentation/handoff layer with a strong root `README.md`, docs index, practical local setup guide, and explicit contributor continuation guidance.
+  - Normalized architecture docs to reflect the implemented planner/runtime/generator/validator boundaries and removed stale deferred-prompt language.
+  - Added explicit architecture red lines in prominent docs to preserve planner-first, relational-runtime, and generator-on-rails doctrine.
+  - Cross-linked setup, seed/demo, testing, architecture, and contributor docs so future contributors can navigate and continue safely.
+  - Verified documentation updates against actual scripts, routes, test commands, and current repo behavior.
+- Files changed:
+  - `README.md`
+  - `docs/README.md`
+  - `docs/local-setup.md`
+  - `docs/contributor-handoff.md`
+  - `docs/architecture-overview.md`
+  - `docs/module-boundaries.md`
+  - `docs/admin-inspector.md`
+  - `docs/planner-mvp.md`
+  - `docs/generator-boundary.md`
+  - `docs/authoring-schema.md`
+  - `docs/runtime-schema.md`
+  - `docs/seed-data.md`
+  - `docs/testing-and-quality-gates.md`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `Get-ChildItem docs | Select-Object -ExpandProperty Name`
+  - `Get-Content -Raw docs/architecture-overview.md`
+  - `Get-Content -Raw docs/module-boundaries.md`
+  - `Get-Content -Raw docs/rebuild-principles.md`
+  - `Get-Content -Raw docs/admin-inspector.md`
+  - `Get-Content -Raw docs/planner-mvp.md`
+  - `Get-Content -Raw docs/generator-boundary.md`
+  - `Get-Content -Raw docs/authoring-schema.md`
+  - `Get-Content -Raw docs/runtime-schema.md`
+  - `rg -n "deferred to|remains for prompt|Still deferred" docs README.md`
+  - `npm run format:check` (initially failed)
+  - `npx prettier --write README.md docs/README.md docs/local-setup.md docs/contributor-handoff.md`
+  - `npm run format:check`
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:run`
+- Verification:
+  - Confirmed root README now documents architecture posture, setup flow, demo usage, verify path, and architecture red lines.
+  - Confirmed docs index and cross-links are in place for architecture/setup/workflow/demo/testing/handoff navigation.
+  - Confirmed local setup instructions align with actual scripts (`db:migrate`, `seed:demo`, `dev`, `test:*`, `verify`).
+  - Confirmed stale deferred-prompt references were removed/updated so docs match current implementation state.
+  - Confirmed lint, typecheck, and test suite pass after doc normalization.
+  - Confirmed no code-level architecture regressions were introduced while finalizing docs.
+- Follow-up notes / risks:
+  - Documentation is intentionally concise in some deeper subsystem narratives to keep onboarding practical.
+  - Future expansions can add troubleshooting matrices and operational runbooks as production operations mature.
+  - The sequential rebuild prompt chain is now complete (`00` through `20` checked).
