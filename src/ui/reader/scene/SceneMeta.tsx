@@ -1,7 +1,6 @@
 import { ReaderStatusBadge } from "@/ui/reader/shared/ReaderStatusBadge";
 
 interface SceneMetaProps {
-  readonly sceneInstanceId: string;
   readonly plannerCycle: number;
   readonly progressIndex: number | null;
   readonly endingLocked: boolean | null;
@@ -10,7 +9,6 @@ interface SceneMetaProps {
 }
 
 export function SceneMeta({
-  sceneInstanceId,
   plannerCycle,
   progressIndex,
   endingLocked,
@@ -19,27 +17,29 @@ export function SceneMeta({
 }: SceneMetaProps) {
   return (
     <header className="reader-scene-meta">
-      <h3>Scene Metadata</h3>
+      <h3>Chapter Snapshot</h3>
       <p>
-        <strong>{sceneInstanceId}</strong>
+        Chapter in chronicle:{" "}
+        <strong>{progressIndex === null ? "unknown" : progressIndex + 1}</strong>
       </p>
       <p>
-        Planner cycle: <strong>{plannerCycle}</strong>
+        Story cycle: <strong>{plannerCycle}</strong>
       </p>
       <p>
-        Progress index: <strong>{progressIndex ?? "unknown"}</strong>
-      </p>
-      <p>
-        Ending lock:{" "}
+        Ending trajectory:{" "}
         <strong>
-          {endingLocked === null ? "unknown" : endingLocked ? "locked" : "open"}
+          {endingLocked === null
+            ? "unknown"
+            : endingLocked
+              ? "locked in"
+              : "still open"}
         </strong>
       </p>
       <p>
-        Choices: <strong>{enabledChoiceCount}</strong> enabled /{" "}
-        <strong>{disabledChoiceCount}</strong> disabled
+        Paths available: <strong>{enabledChoiceCount}</strong> open /{" "}
+        <strong>{disabledChoiceCount}</strong> locked
       </p>
-      <ReaderStatusBadge label="metadata" tone="planned" />
+      <ReaderStatusBadge label="chapter" tone="planned" />
     </header>
   );
 }

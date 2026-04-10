@@ -4,6 +4,8 @@ import { ReaderStatusBadge } from "@/ui/reader/shared/ReaderStatusBadge";
 
 interface ChronicleCardProps {
   readonly chronicleId: string;
+  readonly title: string;
+  readonly subtitle?: string | null;
   readonly status: string;
   readonly startedAt: string;
   readonly completedAt?: string | null;
@@ -15,6 +17,8 @@ function formatDate(value: string): string {
 
 export function ChronicleCard({
   chronicleId,
+  title,
+  subtitle,
   status,
   startedAt,
   completedAt
@@ -22,20 +26,23 @@ export function ChronicleCard({
   return (
     <article className="reader-chronicle-card">
       <div className="reader-chronicle-card-top">
-        <h3>{chronicleId}</h3>
+        <h3>{title}</h3>
         <ReaderStatusBadge label={status} tone={status} />
       </div>
+      {subtitle ? <p>{subtitle}</p> : null}
       <p>
-        Started: <strong>{formatDate(startedAt)}</strong>
+        Began: <strong>{formatDate(startedAt)}</strong>
       </p>
       {completedAt ? (
         <p>
-          Completed: <strong>{formatDate(completedAt)}</strong>
+          Finished: <strong>{formatDate(completedAt)}</strong>
         </p>
       ) : null}
       <div className="reader-inline-links">
-        <Link href={`/reader/chronicles/${chronicleId}`}>Open summary</Link>
-        <Link href={`/reader/chronicles/${chronicleId}/scene`}>Open scene</Link>
+        <Link href={`/reader/chronicles/${chronicleId}`}>Story so far</Link>
+        <Link href={`/reader/chronicles/${chronicleId}/scene`}>
+          Continue reading
+        </Link>
       </div>
     </article>
   );

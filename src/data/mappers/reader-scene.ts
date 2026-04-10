@@ -57,6 +57,30 @@ function titleCaseSentence(value: string): string {
     .join(" ");
 }
 
+function humanizeSceneKind(sceneKind: string): string {
+  if (sceneKind === "opening") {
+    return "opening chapter";
+  }
+
+  if (sceneKind === "development") {
+    return "developing chapter";
+  }
+
+  if (sceneKind === "revelation") {
+    return "revelation chapter";
+  }
+
+  if (sceneKind === "consequence") {
+    return "aftermath chapter";
+  }
+
+  if (sceneKind === "ending") {
+    return "ending chapter";
+  }
+
+  return `${titleCaseSentence(sceneKind).toLowerCase()} chapter`;
+}
+
 function goalSummary(goal: string): string {
   if (goal === "advance-arc") {
     return "advancing a key story arc";
@@ -84,11 +108,11 @@ function buildFallbackBody(
 
   return {
     mode: "fallback",
-    title: "Scene structure available",
+    title: "The next chapter is ready",
     paragraphs: [
-      `This ${titleCaseSentence(input.scene.sceneKind).toLowerCase()} scene is focused on ${goalSummary(input.scene.sceneGoal)}.`,
+      `This ${humanizeSceneKind(input.scene.sceneKind)} is focused on ${goalSummary(input.scene.sceneGoal)}.`,
       perspectiveLine,
-      `Choices available: ${input.choices.filter((choice) => choice.isEnabled).length} enabled, ${input.choices.filter((choice) => !choice.isEnabled).length} disabled.`
+      `Available paths right now: ${input.choices.filter((choice) => choice.isEnabled).length} open, ${input.choices.filter((choice) => !choice.isEnabled).length} locked.`
     ]
   };
 }
@@ -108,10 +132,26 @@ function buildSceneBody(input: MapRuntimeSceneForReaderInput): ReaderSceneBody {
 
 function mapChoiceIntentLabel(intent: string | null): string {
   if (!intent) {
-    return "No explicit intent";
+    return "Leads the story forward.";
   }
 
-  return titleCaseSentence(intent);
+  if (intent === "advance-milestone") {
+    return "Pushes a key story milestone forward.";
+  }
+
+  if (intent === "surface-reveal") {
+    return "Brings hidden truths into the open.";
+  }
+
+  if (intent === "manage-pacing") {
+    return "Changes the pace and pressure of the next chapter.";
+  }
+
+  if (intent === "deliver-ending") {
+    return "Moves the chronicle toward an ending.";
+  }
+
+  return `${titleCaseSentence(intent)}.`;
 }
 
 export function mapRuntimeSceneForReader(

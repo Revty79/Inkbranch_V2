@@ -1,25 +1,25 @@
 interface ProgressPanelProps {
   readonly progressIndex: number;
   readonly endingLocked: boolean;
-  readonly currentSceneId?: string | null;
+  readonly hasCurrentScene: boolean;
 }
 
 export function ProgressPanel({
   progressIndex,
   endingLocked,
-  currentSceneId
+  hasCurrentScene
 }: ProgressPanelProps) {
   return (
     <section className="reader-progress-panel">
-      <h3>Run Progress</h3>
+      <h3>Reading Progress</h3>
       <p>
-        Progress index: <strong>{progressIndex}</strong>
+        Chapters progressed: <strong>{progressIndex}</strong>
       </p>
       <p>
-        Ending lock: <strong>{endingLocked ? "locked" : "open"}</strong>
+        Ending path: <strong>{endingLocked ? "locked in" : "still open"}</strong>
       </p>
       <p>
-        Current scene: <strong>{currentSceneId ?? "none"}</strong>
+        Next chapter: <strong>{hasCurrentScene ? "ready now" : "not available yet"}</strong>
       </p>
     </section>
   );

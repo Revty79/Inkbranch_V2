@@ -6,7 +6,7 @@ export default function ReaderChronicleNotFound() {
   return (
     <ReaderEmptyState
       title="Chronicle not found"
-      message="The requested chronicle could not be loaded from runtime state."
+      message="That chronicle is unavailable or no longer exists."
       action={<Link href="/reader/chronicles">Back to chronicles</Link>}
     />
   );

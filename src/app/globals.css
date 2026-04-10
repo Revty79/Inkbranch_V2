@@ -730,6 +730,15 @@ body {
   margin-top: 0;
 }
 
+.reader-flow-note {
+  margin: 0.8rem 0 0;
+  border: 1px solid #c7d9e6;
+  border-radius: 0.5rem;
+  background: #f3f9ff;
+  padding: 0.65rem 0.75rem;
+  color: #294457;
+}
+
 .reader-inline-links {
   margin-top: 0.85rem;
   display: flex;
@@ -880,7 +889,7 @@ body {
   padding: 1rem;
 }
 
-.reader-scene-meta h2,
+.reader-scene-meta h3,
 .reader-choice-list-section h3 {
   margin-top: 0;
 }
@@ -919,6 +928,12 @@ body {
   margin: 0.45rem 0 0;
 }
 
+.reader-scene-prose p:first-child,
+.reader-scene-fallback-body p:first-child,
+.reader-scene-placeholder p:first-child {
+  margin-top: 0;
+}
+
 .reader-choice-list-section {
   margin-top: 0.9rem;
 }
@@ -939,10 +954,31 @@ body {
   padding: 0.8rem;
 }
 
-.reader-choice-id {
-  margin-top: 0.6rem;
-  color: #54626e;
-  font-size: 0.82rem;
+.reader-choice-form {
+  margin-top: 0.75rem;
+}
+
+.reader-choice-action {
+  width: 100%;
+  border: 1px solid #8eb0c8;
+  border-radius: 0.45rem;
+  background: #eaf5ff;
+  color: #103753;
+  padding: 0.45rem 0.65rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.reader-choice-action:hover:enabled {
+  background: #dceeff;
+}
+
+.reader-choice-action:disabled {
+  cursor: not-allowed;
+  background: #f0f4f8;
+  border-color: #c9d4dd;
+  color: #5b6975;
 }
 
 @media (max-width: 900px) {

@@ -8,30 +8,38 @@ export interface SceneChoiceListItem {
 }
 
 interface ChoiceListProps {
+  readonly sceneInstanceId: string;
   readonly choices: SceneChoiceListItem[];
+  readonly onSelectChoice?: (formData: FormData) => Promise<void>;
 }
 
-export function ChoiceList({ choices }: ChoiceListProps) {
+export function ChoiceList({
+  sceneInstanceId,
+  choices,
+  onSelectChoice
+}: ChoiceListProps) {
   if (choices.length === 0) {
     return (
       <section className="reader-choice-list-section">
-        <h3>Available Choices</h3>
-        <p>No committed choices are available for this scene yet.</p>
+        <h3>Choose Your Next Move</h3>
+        <p>No paths are ready in this chapter yet. Check back after the next update.</p>
       </section>
     );
   }
 
   return (
     <section className="reader-choice-list-section">
-      <h3>Available Choices</h3>
+      <h3>Choose Your Next Move</h3>
       <ul className="reader-choice-list">
         {choices.map((choice) => (
           <li key={choice.choiceId}>
             <ChoiceCard
+              sceneInstanceId={sceneInstanceId}
               choiceId={choice.choiceId}
               label={choice.label}
               intentLabel={choice.intentLabel}
               availability={choice.availability}
+              onSelectChoice={onSelectChoice}
             />
           </li>
         ))}

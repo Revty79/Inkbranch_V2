@@ -85,8 +85,8 @@ describe("scene package rendering mapper", () => {
       throw new Error("Expected fallback mode.");
     }
 
-    expect(presentation.body.title).toBe("Scene structure available");
-    expect(presentation.body.paragraphs.join(" ")).toContain("development");
+    expect(presentation.body.title).toBe("The next chapter is ready");
+    expect(presentation.body.paragraphs.join(" ")).toContain("chapter");
   });
 
   it("maps enabled and disabled choices into reader availability states", () => {

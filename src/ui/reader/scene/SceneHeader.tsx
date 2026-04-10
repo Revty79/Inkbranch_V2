@@ -9,6 +9,46 @@ interface SceneHeaderProps {
   readonly perspectiveName: string | null;
 }
 
+function describeSceneKind(sceneKind: string): string {
+  if (sceneKind === "opening") {
+    return "Opening";
+  }
+
+  if (sceneKind === "development") {
+    return "Turning point";
+  }
+
+  if (sceneKind === "revelation") {
+    return "Revelation";
+  }
+
+  if (sceneKind === "consequence") {
+    return "Aftermath";
+  }
+
+  if (sceneKind === "ending") {
+    return "Ending";
+  }
+
+  return sceneKind;
+}
+
+function describeSceneGoal(sceneGoal: string): string {
+  if (sceneGoal === "advance-arc") {
+    return "Advance the main arc";
+  }
+
+  if (sceneGoal === "surface-reveal") {
+    return "Uncover a hidden truth";
+  }
+
+  if (sceneGoal === "deliver-ending") {
+    return "Approach an ending";
+  }
+
+  return sceneGoal;
+}
+
 export function SceneHeader({
   sceneKind,
   sceneGoal,
@@ -23,7 +63,8 @@ export function SceneHeader({
         <ReaderStatusBadge label={sceneStatus} tone={sceneStatus} />
       </div>
       <p>
-        Kind: <strong>{sceneKind}</strong> | Goal: <strong>{sceneGoal}</strong>
+        {describeSceneKind(sceneKind)} moment. Focus:{" "}
+        <strong>{describeSceneGoal(sceneGoal)}</strong>.
       </p>
       {perspectiveId ? (
         <p>
@@ -33,7 +74,7 @@ export function SceneHeader({
           />
         </p>
       ) : (
-        <p>Perspective context is not committed yet.</p>
+        <p>The point of view is still being selected.</p>
       )}
     </header>
   );

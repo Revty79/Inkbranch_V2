@@ -66,7 +66,7 @@ Foundation rebuild
 - [x] 19_tests_and_quality_gates.md
 - [x] 20_docs_and_handoff.md
 - [x] 21_public_product_repositioning.md
-- [ ] 22_reader_experience_upgrade.md
+- [x] 22_reader_experience_upgrade.md
 - [ ] 23_visual_identity_port_from_v1.md
 - [ ] 24_onboarding_and_discovery.md
 - [ ] 25_studio_language_and_flow_polish.md
@@ -1492,3 +1492,67 @@ If blocked:
   - Confirmed scope stayed in product-facing UI surfaces and shared reader shell/nav only; no core architecture logic changes.
 - Follow-up notes / risks:
   - This pass intentionally focuses on public entry-point positioning and language; deeper reader journey and in-chronicle UX upgrades remain for `22_reader_experience_upgrade.md`.
+
+
+### 2026-04-09 - Reader experience upgrade
+- Prompt: `22_reader_experience_upgrade.md`
+- Status: completed
+- Summary:
+  - Upgraded reader chronicle and scene flow to feel playable: enabled choices are now direct "Choose and continue" actions instead of static inspection cards.
+  - Added a server-side reader choice action that resolves the selected runtime choice, requests the next valid scene from the planner, instantiates the next scene through runtime commit pipeline, and redirects back into reading flow.
+  - Rewrote chronicle and scene copy to remove internal architecture language and guide natural continuation ("Story so far", "Continue reading", "Choose your next move").
+  - Removed reader-facing technical references such as visible choice IDs and scene IDs from normal reading surfaces.
+  - Improved scene readability by rendering prose as paragraphs and polishing fallback chapter language and chapter snapshot labels.
+  - Updated reader unit/integration/e2e assertions for the new product-facing wording and flow.
+- Files changed:
+  - `src/app/(reader)/reader/chronicles/page.tsx`
+  - `src/app/(reader)/reader/chronicles/loading.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/page.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/loading.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/error.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/not-found.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/scene/page.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/scene/loading.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/scene/error.tsx`
+  - `src/ui/reader/chronicle/ChronicleList.tsx`
+  - `src/ui/reader/chronicle/ChronicleCard.tsx`
+  - `src/ui/reader/chronicle/ChronicleSummary.tsx`
+  - `src/ui/reader/chronicle/ProgressPanel.tsx`
+  - `src/ui/reader/scene/SceneFrame.tsx`
+  - `src/ui/reader/scene/ChoiceList.tsx`
+  - `src/ui/reader/scene/ChoiceCard.tsx`
+  - `src/ui/reader/scene/SceneBody.tsx`
+  - `src/ui/reader/scene/SceneHeader.tsx`
+  - `src/ui/reader/scene/SceneMeta.tsx`
+  - `src/data/mappers/reader-scene.ts`
+  - `src/app/globals.css`
+  - `tests/unit/reader/scene-package-rendering.test.ts`
+  - `tests/integration/reader/reader-shell-ui.test.tsx`
+  - `tests/e2e/demo-fixture.ts`
+  - `tests/e2e/demo-flow.spec.ts`
+  - `tests/e2e/reader.spec.ts`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm run lint`
+  - `npm run typecheck` (initial run failed with nullable narrowing in scene action closure; fixed via explicit non-null local bindings and reran)
+  - `npm run test:unit`
+  - `npm run test:integration` (initial run failed due stale integration expectation string; updated expected fallback title and reran)
+  - `npm run build` (first run hit transient Next.js module-lookup error for existing admin pages; removed `.next` and reran successfully)
+  - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run test:e2e` (initial run failed due strict locator ambiguity in updated reader assertion; made locator specific and reran)
+  - Final verification sweep:
+    - `npm run lint`
+    - `npm run typecheck`
+    - `npm run test:unit`
+    - `npm run test:integration`
+    - `npm run build`
+    - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run test:e2e`
+- Verification:
+  - Confirmed lint and typecheck pass for final reader route/component updates.
+  - Confirmed unit tests pass, including updated scene fallback mapping assertions.
+  - Confirmed integration tests pass, including updated reader shell UI expectations.
+  - Confirmed build passes after cleanup and final state compiles with all routes.
+  - Confirmed e2e passes for Studio, Reader scene, Admin chronicle inspection, and reader chronicles -> summary -> scene flow.
+  - Confirmed choices are now actionable in reader UI using existing planner/runtime architecture (no engine logic moved into UI components).
+- Follow-up notes / risks:
+  - Reader choice submission currently redirects with concise status notices; richer per-choice failure messaging could be improved in a future pass.
+  - This prompt intentionally avoided broader visual-identity overhaul and onboarding redesign, which remain in later scoped prompts.

@@ -17,16 +17,18 @@ describe("Reader shell UI", () => {
   it("renders chronicle summary with scene and perspective context", () => {
     const html = renderToStaticMarkup(
       <ChronicleSummary
-        chronicleId="chronicle-1"
+        title="The Meridian Gate"
+        subtitle="Stormfront arc"
         status="active"
         startedAt="2026-04-08T00:00:00.000Z"
+        latestMomentAt="2026-04-09T00:00:00.000Z"
         currentPerspectiveId="perspective-1"
-        currentSceneInstanceId="scene-9"
+        hasCurrentScene
       />
     );
 
-    expect(html).toContain("chronicle-1");
-    expect(html).toContain("scene-9");
+    expect(html).toContain("The Meridian Gate");
+    expect(html).toContain("ready to read");
     expect(html).toContain("perspective-1");
   });
 
@@ -42,7 +44,7 @@ describe("Reader shell UI", () => {
         perspectiveName="Lead POV"
         body={{
           mode: "fallback",
-          title: "Scene structure available",
+          title: "The next chapter is ready",
           paragraphs: ["Fallback body for missing prose."]
         }}
         progressIndex={2}
@@ -58,7 +60,7 @@ describe("Reader shell UI", () => {
       />
     );
 
-    expect(html).toContain("Scene structure available");
+    expect(html).toContain("The next chapter is ready");
     expect(html).toContain("Advance");
   });
 });

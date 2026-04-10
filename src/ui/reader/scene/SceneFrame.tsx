@@ -15,6 +15,7 @@ interface SceneFrameProps {
   readonly progressIndex: number | null;
   readonly endingLocked: boolean | null;
   readonly choices: SceneChoiceListItem[];
+  readonly onSelectChoice?: (formData: FormData) => Promise<void>;
 }
 
 export function SceneFrame({
@@ -28,7 +29,8 @@ export function SceneFrame({
   body,
   progressIndex,
   endingLocked,
-  choices
+  choices,
+  onSelectChoice
 }: SceneFrameProps) {
   const enabledChoiceCount = choices.filter(
     (choice) => choice.availability === "enabled"
@@ -45,14 +47,17 @@ export function SceneFrame({
       />
       <SceneBody body={body} />
       <SceneMeta
-        sceneInstanceId={sceneId}
         plannerCycle={plannerCycle}
         progressIndex={progressIndex}
         endingLocked={endingLocked}
         enabledChoiceCount={enabledChoiceCount}
         disabledChoiceCount={choices.length - enabledChoiceCount}
       />
-      <ChoiceList choices={choices} />
+      <ChoiceList
+        sceneInstanceId={sceneId}
+        choices={choices}
+        onSelectChoice={onSelectChoice}
+      />
     </section>
   );
 }

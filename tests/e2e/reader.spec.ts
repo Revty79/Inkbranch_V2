@@ -9,7 +9,9 @@ test("reader loads demo chronicle scene", async ({ page }) => {
     page.getByRole("heading", { name: "Current Scene" })
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Available Choices" })
+    page.getByRole("heading", { name: "Choose Your Next Move" })
   ).toBeVisible();
-  await expect(page.getByText("Kind:")).toBeVisible();
+  await expect(page.locator(".reader-scene-header p").first()).toContainText(
+    "Focus:"
+  );
 });

@@ -13,14 +13,13 @@ export default function ReaderSceneError({
 }: ReaderSceneErrorProps) {
   return (
     <ReaderErrorState
-      title="Scene route error"
+      title="Could not load this chapter"
       message={
-        error.message ||
-        "The current scene route failed to load. You can retry safely."
+        error.message || "This chapter failed to load. You can safely try again."
       }
       action={
         <button type="button" onClick={reset} className="reader-inline-button">
-          Retry scene route
+          Retry chapter
         </button>
       }
     />

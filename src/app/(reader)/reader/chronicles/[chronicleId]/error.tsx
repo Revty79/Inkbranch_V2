@@ -13,14 +13,14 @@ export default function ReaderChronicleError({
 }: ReaderChronicleErrorProps) {
   return (
     <ReaderErrorState
-      title="Chronicle route error"
+      title="Could not load this chronicle"
       message={
         error.message ||
-        "The chronicle route failed to load. You can retry safely."
+        "The chronicle summary could not load right now. You can safely try again."
       }
       action={
         <button type="button" onClick={reset} className="reader-inline-button">
-          Retry chronicle route
+          Retry chronicle
         </button>
       }
     />

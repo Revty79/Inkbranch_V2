@@ -19,9 +19,20 @@ interface SceneBodyProps {
 
 export function SceneBody({ body }: SceneBodyProps) {
   if (body.mode === "prose") {
+    const paragraphs = body.prose
+      .split(/\n{2,}/)
+      .map((paragraph) => paragraph.trim())
+      .filter((paragraph) => paragraph.length > 0);
+
     return (
       <article className="reader-scene-prose">
-        <p>{body.prose}</p>
+        {paragraphs.length > 0 ? (
+          paragraphs.map((paragraph, index) => (
+            <p key={`${paragraph.slice(0, 12)}-${index}`}>{paragraph}</p>
+          ))
+        ) : (
+          <p>{body.prose}</p>
+        )}
       </article>
     );
   }
