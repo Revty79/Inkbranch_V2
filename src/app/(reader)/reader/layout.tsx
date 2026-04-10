@@ -10,7 +10,7 @@ export default function ReaderLayout({ children }: ReaderLayoutProps) {
   return (
     <ReaderShell
       title="Inkbranch Reader"
-      subtitle="Read committed runtime scenes and choices without exposing engine internals."
+      subtitle="Follow each chronicle through its latest scenes, choices, and perspectives."
     >
       {children}
     </ReaderShell>

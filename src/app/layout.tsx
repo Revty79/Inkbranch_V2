@@ -8,7 +8,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: APP_TITLE,
   description:
-    "Planner-first, book-first, world-first interactive fiction platform rebuild."
+    "Reader-first interactive fiction platform for world-driven chronicles and perspectives."
 };
 
 type RootLayoutProps = {

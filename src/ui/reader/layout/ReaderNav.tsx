@@ -7,15 +7,13 @@ interface ReaderNavProps {
 export function ReaderNav({ chronicleId }: ReaderNavProps) {
   return (
     <nav className="reader-nav" aria-label="Reader navigation">
-      <Link href="/reader">Reader Home</Link>
+      <Link href="/reader">Start</Link>
       <Link href="/reader/chronicles">Chronicles</Link>
       {chronicleId ? (
         <>
-          <Link href={`/reader/chronicles/${chronicleId}`}>
-            Chronicle Summary
-          </Link>
+          <Link href={`/reader/chronicles/${chronicleId}`}>Story so far</Link>
           <Link href={`/reader/chronicles/${chronicleId}/scene`}>
-            Current Scene
+            Continue reading
           </Link>
         </>
       ) : null}

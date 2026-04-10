@@ -5,7 +5,7 @@ interface ReaderHeaderProps {
 
 export function ReaderHeader({
   title = "Inkbranch Reader",
-  subtitle = "Chronicle-centered reading surface for committed runtime state."
+  subtitle = "Step into a chronicle, follow the current perspective, and keep the story moving."
 }: ReaderHeaderProps) {
   return (
     <header className="reader-header">

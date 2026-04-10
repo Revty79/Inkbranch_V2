@@ -65,6 +65,11 @@ Foundation rebuild
 - [x] 18_seed_data_and_demo_book.md
 - [x] 19_tests_and_quality_gates.md
 - [x] 20_docs_and_handoff.md
+- [x] 21_public_product_repositioning.md
+- [ ] 22_reader_experience_upgrade.md
+- [ ] 23_visual_identity_port_from_v1.md
+- [ ] 24_onboarding_and_discovery.md
+- [ ] 25_studio_language_and_flow_polish.md
 
 ## Prompt intent map
 
@@ -1452,3 +1457,38 @@ If blocked:
   - Documentation is intentionally concise in some deeper subsystem narratives to keep onboarding practical.
   - Future expansions can add troubleshooting matrices and operational runbooks as production operations mature.
   - The sequential rebuild prompt chain is now complete (`00` through `20` checked).
+
+
+### 2026-04-09 - Public product repositioning
+- Prompt: `21_public_product_repositioning.md`
+- Status: completed
+- Summary:
+  - Repositioned `/` as a reader-first, story-first product landing page with clear language about chronicles, perspectives, and interactive reading.
+  - Reworked home-page calls to action to prioritize Reader flow (`/reader`, `/reader/chronicles`) and moved Admin to a secondary internal diagnostics note.
+  - Updated `/reader` entry and shared reader shell copy to remove architecture-heavy language and guide users toward opening or continuing chronicles.
+  - Refined reader navigation labels to emphasize reading flow (`Start`, `Story so far`, `Continue reading`) instead of internal terminology.
+  - Added minimal public-facing style updates for the landing experience without touching planner/runtime/generator architecture boundaries.
+- Files changed:
+  - `src/app/page.tsx`
+  - `src/app/layout.tsx`
+  - `src/app/globals.css`
+  - `src/app/(reader)/reader/page.tsx`
+  - `src/app/(reader)/reader/layout.tsx`
+  - `src/ui/reader/layout/ReaderHeader.tsx`
+  - `src/ui/reader/layout/ReaderNav.tsx`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:unit`
+  - `npm run test:integration`
+  - `npm run build`
+  - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run test:e2e`
+- Verification:
+  - Confirmed lint and typecheck pass after public UX copy/layout changes.
+  - Confirmed unit and integration suites pass without regressions.
+  - Confirmed production build passes and routes compile successfully.
+  - Confirmed e2e suite passes (Studio, Reader scene, Admin chronicle inspection, and Reader chronicles -> summary -> scene flow).
+  - Confirmed scope stayed in product-facing UI surfaces and shared reader shell/nav only; no core architecture logic changes.
+- Follow-up notes / risks:
+  - This pass intentionally focuses on public entry-point positioning and language; deeper reader journey and in-chronicle UX upgrades remain for `22_reader_experience_upgrade.md`.
