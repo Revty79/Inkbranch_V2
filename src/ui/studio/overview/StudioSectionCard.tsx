@@ -7,13 +7,15 @@ type StudioSectionCardProps = {
   readonly description: string;
   readonly href: string;
   readonly status: "planned" | "ready";
+  readonly actionLabel?: string;
 };
 
 export function StudioSectionCard({
   title,
   description,
   href,
-  status
+  status,
+  actionLabel
 }: StudioSectionCardProps) {
   return (
     <article className="studio-section-card">
@@ -22,7 +24,7 @@ export function StudioSectionCard({
         <StudioStatusBadge status={status} />
       </div>
       <p>{description}</p>
-      <Link href={href}>Open Section</Link>
+      <Link href={href}>{actionLabel ?? `Open ${title}`}</Link>
     </article>
   );
 }

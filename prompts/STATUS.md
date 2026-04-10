@@ -69,7 +69,7 @@ Foundation rebuild
 - [x] 22_reader_experience_upgrade.md
 - [x] 23_visual_identity_port_from_v1.md
 - [x] 24_onboarding_and_discovery.md
-- [ ] 25_studio_language_and_flow_polish.md
+- [x] 25_studio_language_and_flow_polish.md
 
 ## Prompt intent map
 
@@ -1625,3 +1625,53 @@ If blocked:
 - Follow-up notes / risks:
   - Discovery guidance is currently UI-led and intentionally lightweight; deeper onboarding progression logic remains out of scope.
   - Studio language/flow polish is intentionally deferred to `25_studio_language_and_flow_polish.md`.
+
+
+### 2026-04-09 - Studio language and flow polish
+- Prompt: `25_studio_language_and_flow_polish.md`
+- Status: completed
+- Summary:
+  - Reframed Studio shell language to be author-facing, replacing architecture-heavy phrases with workflow-oriented guidance.
+  - Improved Studio overview with a suggested setup order and stronger section descriptions focused on what to create next.
+  - Added connected navigation affordances across Worlds, Books, Versions, Canon, Entities, and Planning with clearer cross-section links.
+  - Improved empty states with direct action links so authors can recover quickly when required setup is missing.
+  - Polished version-context and sub-navigation clarity, including active-link states and clearer "working version" wording.
+- Files changed:
+  - `src/app/(studio)/studio/layout.tsx`
+  - `src/app/(studio)/studio/page.tsx`
+  - `src/app/(studio)/studio/worlds/page.tsx`
+  - `src/app/(studio)/studio/books/page.tsx`
+  - `src/app/(studio)/studio/versions/page.tsx`
+  - `src/app/(studio)/studio/canon/page.tsx`
+  - `src/app/(studio)/studio/entities/page.tsx`
+  - `src/app/(studio)/studio/planning/page.tsx`
+  - `src/ui/studio/layout/StudioNav.tsx`
+  - `src/ui/studio/layout/StudioSidebar.tsx`
+  - `src/ui/studio/overview/StudioSectionCard.tsx`
+  - `src/ui/studio/shared/StudioEmptyState.tsx`
+  - `src/ui/studio/shared/StudioSubnav.tsx`
+  - `src/ui/studio/shared/StudioVersionContext.tsx`
+  - `src/app/globals.css`
+  - `tests/e2e/studio.spec.ts`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:unit`
+  - `npm run test:integration`
+  - `npm run build` (initial run failed with Windows file lock on `.next/trace`)
+  - `Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'node.exe' -and $_.CommandLine -like '*next*' } | Select-Object ProcessId, CommandLine`
+  - `Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'node.exe' -and $_.CommandLine -like '*Inkbranch_V2*next*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }`
+  - `if (Test-Path .next) { Remove-Item -Recurse -Force .next }`
+  - `npm run build` (rerun successful)
+  - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run test:e2e` (initial run failed due strict duplicate-link locator in updated Studio page)
+  - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run test:e2e` (rerun successful after updating `tests/e2e/studio.spec.ts`)
+- Verification:
+  - Confirmed lint and typecheck pass after Studio route and shared UI polish.
+  - Confirmed unit and integration suites pass with no regressions.
+  - Confirmed build passes after clearing a stale local Next.js file lock.
+  - Confirmed e2e suite passes for Studio, Reader, Admin, and demo reader flow after updating the Studio selector expectation.
+  - Confirmed changes remain within Studio UX/copy/navigation surfaces and do not change planner/runtime/generator ownership.
+- Follow-up notes / risks:
+  - This pass intentionally focused on language clarity and guided flow, not new authoring feature scope.
+  - Studio detail and form pages still include some lower-level field vocabulary by design; deeper model-language simplification can be handled in a future scoped prompt if needed.

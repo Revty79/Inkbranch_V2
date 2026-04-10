@@ -35,11 +35,13 @@ export default async function StudioCanonPage({
       <>
         <StudioSectionHeader
           title="Canon"
-          description="Manage canonical entries scoped to an authored book version."
+          description="Write the facts this version must stay true to."
         />
         <StudioEmptyState
           title="No versions available"
-          description="Create a version before adding canon entries."
+          description="Create a version first, then add canon entries."
+          actionHref="/studio/versions/new"
+          actionLabel="Create a version"
         />
       </>
     );
@@ -51,22 +53,40 @@ export default async function StudioCanonPage({
     <>
       <StudioSectionHeader
         title="Canon"
-        description="Create and edit canonical facts that the planner can trust as authored truth."
+        description="Capture story facts for the selected version so continuity stays consistent."
       />
       <StudioVersionContext
         versions={versions}
         selectedVersionId={selectedVersion.id}
         actionPath="/studio/canon"
       />
+      <section className="studio-flow-note">
+        <p>
+          Use canon for stable truths. Then shape who readers follow in{" "}
+          <Link href={`/studio/entities?versionId=${selectedVersion.id}`}>
+            Entities
+          </Link>{" "}
+          and what story pressure applies in{" "}
+          <Link href={`/studio/planning?versionId=${selectedVersion.id}`}>
+            Planning
+          </Link>
+          .
+        </p>
+      </section>
       <div className="studio-list-actions">
         <Link href={`/studio/canon/new?versionId=${selectedVersion.id}`}>
           Create Canon Entry
+        </Link>
+        <Link href={`/studio/entities?versionId=${selectedVersion.id}`}>
+          Go to Entities
         </Link>
       </div>
       {entries.length === 0 ? (
         <StudioEmptyState
           title="No canon entries in this version"
-          description="Add the first canonical entry to ground planner decisions in authored truth."
+          description="Add your first canon entry so this version has clear story truth."
+          actionHref={`/studio/canon/new?versionId=${selectedVersion.id}`}
+          actionLabel="Create your first canon entry"
         />
       ) : (
         <ul className="studio-list-grid">
@@ -76,9 +96,9 @@ export default async function StudioCanonPage({
             return (
               <li key={entry.id}>
                 <h3>{entry.entryType}</h3>
-                <p>Subject: {entry.subjectType}</p>
-                <p>Visibility: {entry.visibility}</p>
-                <p>Importance: {entry.importance}</p>
+                <p>Applies to: {entry.subjectType}</p>
+                <p>Reader visibility: {entry.visibility}</p>
+                <p>Story weight: {entry.importance}</p>
                 <p>{entry.canonicalText}</p>
                 <p>{tags.length > 0 ? `Tags: ${tags}` : "No tags."}</p>
                 <div className="studio-inline-links">

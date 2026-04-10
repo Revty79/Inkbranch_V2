@@ -12,7 +12,7 @@ export default function StudioLayout({ children }: StudioLayoutProps) {
       header={
         <StudioHeader
           title="Studio"
-          subtitle="Authoring shell for world, book, canon, entity, and planning inputs."
+          subtitle="Authoring workspace for worlds, books, and versioned story-building inputs."
         />
       }
       sidebar={<StudioSidebar />}

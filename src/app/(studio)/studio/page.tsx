@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   StudioOverviewPanel,
   StudioSectionCard,
@@ -8,43 +10,50 @@ const STUDIO_SECTIONS = [
   {
     title: "Worlds",
     description:
-      "Manage top-level universes that contain books and authoring context.",
+      "Start with the story universe that will hold one or more books.",
     href: "/studio/worlds",
-    status: "ready"
+    status: "ready",
+    actionLabel: "Set up worlds"
   },
   {
     title: "Books",
     description:
-      "Manage books inside worlds with core premise and tone direction.",
+      "Create books inside a world with a premise, tone, and story promise.",
     href: "/studio/books",
-    status: "ready"
+    status: "ready",
+    actionLabel: "Manage books"
   },
   {
     title: "Versions",
     description:
-      "Manage draft/test/published version anchors for authored truth.",
+      "Create draft, test, and published versions for each book.",
     href: "/studio/versions",
-    status: "ready"
+    status: "ready",
+    actionLabel: "Choose versions"
   },
   {
     title: "Canon",
     description:
-      "Manage authored truth entries used as planner input and continuity baseline.",
+      "Write the facts this version must stay true to during story progression.",
     href: "/studio/canon",
-    status: "ready"
+    status: "ready",
+    actionLabel: "Write canon"
   },
   {
     title: "Entities",
-    description: "Manage characters, locations, factions, and perspectives.",
+    description:
+      "Define the cast, locations, factions, and perspectives readers follow.",
     href: "/studio/entities",
-    status: "ready"
+    status: "ready",
+    actionLabel: "Build entities"
   },
   {
     title: "Planning",
     description:
-      "Manage milestones, reveal rules, pacing rules, and ending rules.",
+      "Shape milestones, reveals, pacing, and ending paths for this version.",
     href: "/studio/planning",
-    status: "ready"
+    status: "ready",
+    actionLabel: "Set planning rules"
   }
 ] as const;
 
@@ -53,8 +62,29 @@ export default function StudioOverviewPage() {
     <>
       <StudioSectionHeader
         title="Studio Overview"
-        description="Studio is the author-facing home for book-bible inputs. It does not contain planner, runtime, or generator engine logic."
+        description="Build your story foundation in order: world -> book -> version -> canon, entities, and planning."
       />
+      <section className="studio-flow-note">
+        <h3>Suggested setup order</h3>
+        <ol>
+          <li>
+            <Link href="/studio/worlds">Create a world</Link> to define your
+            story universe.
+          </li>
+          <li>
+            <Link href="/studio/books">Add a book</Link> with premise and tone.
+          </li>
+          <li>
+            <Link href="/studio/versions">Create a version</Link> so you can
+            author safely in draft or test mode.
+          </li>
+          <li>
+            Fill that version with <Link href="/studio/canon">Canon</Link>,{" "}
+            <Link href="/studio/entities">Entities</Link>, and{" "}
+            <Link href="/studio/planning">Planning</Link> inputs.
+          </li>
+        </ol>
+      </section>
       <StudioOverviewPanel>
         {STUDIO_SECTIONS.map((section) => (
           <StudioSectionCard
@@ -63,6 +93,7 @@ export default function StudioOverviewPage() {
             description={section.description}
             href={section.href}
             status={section.status}
+            actionLabel={section.actionLabel}
           />
         ))}
       </StudioOverviewPanel>

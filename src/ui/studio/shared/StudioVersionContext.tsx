@@ -14,7 +14,7 @@ export function StudioVersionContext({
   return (
     <section className="studio-version-context">
       <form method="get" action={actionPath}>
-        <label htmlFor="versionId">Active Book Version</label>
+        <label htmlFor="versionId">Working version</label>
         <select
           id="versionId"
           name="versionId"
@@ -30,7 +30,10 @@ export function StudioVersionContext({
             </option>
           ))}
         </select>
-        <button type="submit">Apply</button>
+        <p className="studio-version-context-note">
+          Everything on this page is saved to the selected version.
+        </p>
+        <button type="submit">Switch version</button>
       </form>
     </section>
   );

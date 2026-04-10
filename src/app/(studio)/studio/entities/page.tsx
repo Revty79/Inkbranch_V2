@@ -50,11 +50,13 @@ export default async function StudioEntitiesPage({
       <>
         <StudioSectionHeader
           title="Entities"
-          description="Manage version-owned characters, locations, factions, and perspectives."
+          description="Define the cast, places, groups, and perspectives for a version."
         />
         <StudioEmptyState
           title="No versions available"
-          description="Create a book version before authoring entities."
+          description="Create a version before building characters and other entities."
+          actionHref="/studio/versions/new"
+          actionLabel="Create a version"
         />
       </>
     );
@@ -71,76 +73,93 @@ export default async function StudioEntitiesPage({
     <>
       <StudioSectionHeader
         title="Entities"
-        description="Author the cast, places, groups, and perspective anchors for the selected version."
+        description="Build the people, places, groups, and POV anchors for the selected version."
       />
       <StudioVersionContext
         versions={versions}
         selectedVersionId={selectedVersion.id}
         actionPath="/studio/entities"
       />
+      <section className="studio-flow-note">
+        <p>
+          Start with characters and perspectives, then add canonical facts in{" "}
+          <Link href={`/studio/canon?versionId=${selectedVersion.id}`}>
+            Canon
+          </Link>{" "}
+          and story pressure in{" "}
+          <Link href={`/studio/planning?versionId=${selectedVersion.id}`}>
+            Planning
+          </Link>
+          .
+        </p>
+      </section>
       <StudioSubnav items={buildEntitiesSubnav(selectedVersion.id)} />
       <ul className="studio-list-grid">
         <li>
           <h3>Characters</h3>
-          <p>{characters.length} records</p>
+          <p>{characters.length} created</p>
+          <p>Who appears in this story and what drives them.</p>
           <div className="studio-inline-links">
             <Link
               href={`/studio/entities/characters?versionId=${selectedVersion.id}`}
             >
-              View
+              View list
             </Link>
             <Link
               href={`/studio/entities/characters/new?versionId=${selectedVersion.id}`}
             >
-              Create
+              Add character
             </Link>
           </div>
         </li>
         <li>
           <h3>Locations</h3>
-          <p>{locations.length} records</p>
+          <p>{locations.length} created</p>
+          <p>Important places where scenes can unfold.</p>
           <div className="studio-inline-links">
             <Link
               href={`/studio/entities/locations?versionId=${selectedVersion.id}`}
             >
-              View
+              View list
             </Link>
             <Link
               href={`/studio/entities/locations/new?versionId=${selectedVersion.id}`}
             >
-              Create
+              Add location
             </Link>
           </div>
         </li>
         <li>
           <h3>Factions</h3>
-          <p>{factions.length} records</p>
+          <p>{factions.length} created</p>
+          <p>Groups, alliances, and rival interests.</p>
           <div className="studio-inline-links">
             <Link
               href={`/studio/entities/factions?versionId=${selectedVersion.id}`}
             >
-              View
+              View list
             </Link>
             <Link
               href={`/studio/entities/factions/new?versionId=${selectedVersion.id}`}
             >
-              Create
+              Add faction
             </Link>
           </div>
         </li>
         <li>
           <h3>Perspectives</h3>
-          <p>{perspectives.length} records</p>
+          <p>{perspectives.length} created</p>
+          <p>Reader viewpoint anchors and voice guidance.</p>
           <div className="studio-inline-links">
             <Link
               href={`/studio/entities/perspectives?versionId=${selectedVersion.id}`}
             >
-              View
+              View list
             </Link>
             <Link
               href={`/studio/entities/perspectives/new?versionId=${selectedVersion.id}`}
             >
-              Create
+              Add perspective
             </Link>
           </div>
         </li>

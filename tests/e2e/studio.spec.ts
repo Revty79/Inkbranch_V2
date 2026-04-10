@@ -6,6 +6,14 @@ test("studio overview route loads", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Studio Overview" })
   ).toBeVisible();
-  await expect(page.getByRole("link", { name: "Worlds" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Planning" })).toBeVisible();
+  await expect(
+    page
+      .getByLabel("Studio sections")
+      .getByRole("link", { name: "Worlds", exact: true })
+  ).toBeVisible();
+  await expect(
+    page
+      .getByLabel("Studio sections")
+      .getByRole("link", { name: "Planning", exact: true })
+  ).toBeVisible();
 });
