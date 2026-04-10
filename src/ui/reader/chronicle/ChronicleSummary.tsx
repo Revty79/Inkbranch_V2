@@ -42,6 +42,10 @@ export function ChronicleSummary({
       <p>
         Current chapter: <strong>{hasCurrentScene ? "ready to read" : "not ready yet"}</strong>
       </p>
+      <p>
+        Reader action:{" "}
+        <strong>{hasCurrentScene ? "continue reading now" : "check back soon"}</strong>
+      </p>
       {currentPerspectiveId ? (
         <p>
           <PerspectiveBadge perspectiveId={currentPerspectiveId} />

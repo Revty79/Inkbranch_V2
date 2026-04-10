@@ -8,7 +8,9 @@ test("reader demo flow navigates chronicles -> summary -> scene", async ({
   await page.goto("/reader/chronicles");
 
   await expect(page.getByRole("heading", { name: "Chronicles" })).toBeVisible();
-  await expect(page.getByText(DEMO_CHRONICLE_LABEL)).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: DEMO_CHRONICLE_LABEL })
+  ).toBeVisible();
   await page.getByRole("link", { name: "Story so far" }).first().click();
 
   await expect(page.getByRole("heading", { name: "Story So Far" })).toBeVisible();

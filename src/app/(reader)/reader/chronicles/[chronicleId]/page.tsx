@@ -91,6 +91,10 @@ export default async function ReaderChroniclePage({
         <h2>Story So Far</h2>
         <ReaderStatusBadge label={chronicle.status} tone={chronicle.status} />
       </div>
+      <p>
+        This chronicle tracks one ongoing run through the world. Review the
+        current state, then continue into the latest chapter.
+      </p>
       {noticeMessage ? <p className="reader-flow-note">{noticeMessage}</p> : null}
       <ChronicleSummary
         title={chronicleTitle.title}
@@ -111,12 +115,18 @@ export default async function ReaderChroniclePage({
           <Link href={`/reader/chronicles/${chronicle.id}/scene`}>
             Continue reading
           </Link>
+          <Link href="/reader/chronicles">Browse other chronicles</Link>
         </div>
       ) : (
         <ReaderEmptyState
           title="No chapter is ready yet"
-          message="This chronicle has not produced its first readable chapter yet."
-          action={<Link href="/reader/chronicles">Back to chronicles</Link>}
+          message="This chronicle has not produced its first readable chapter yet. Choose another chronicle or return after new story content is generated."
+          action={
+            <div className="reader-inline-links">
+              <Link href="/reader/chronicles">Browse chronicles</Link>
+              <Link href="/reader">Reader home</Link>
+            </div>
+          }
         />
       )}
     </section>

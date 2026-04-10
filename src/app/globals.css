@@ -87,6 +87,31 @@ body {
   gap: 0.85rem;
 }
 
+.public-home-onboarding {
+  border: 1px solid var(--paper-border);
+  border-radius: 0.85rem;
+  background: var(--paper-surface);
+  padding: 1rem 1.05rem;
+}
+
+.public-home-onboarding h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+}
+
+.public-home-onboarding ol {
+  margin: 0.75rem 0 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.35rem;
+  color: var(--ink-body);
+}
+
+.public-home-onboarding li {
+  line-height: 1.5;
+}
+
 .public-action-card {
   border: 1px solid var(--paper-border);
   border-radius: 0.85rem;
@@ -130,6 +155,10 @@ body {
 .public-home-note p {
   margin: 0;
   color: var(--ink-muted);
+}
+
+.public-home-note p + p {
+  margin-top: 0.45rem;
 }
 
 .public-home-note a {
@@ -770,6 +799,27 @@ body {
   color: #294457;
 }
 
+.reader-discovery-panel {
+  margin-top: 0.95rem;
+  border: 1px solid var(--paper-border-strong);
+  border-radius: 0.6rem;
+  background:
+    linear-gradient(145deg, #fff7eb 0%, #f8eedf 100%),
+    var(--paper-surface);
+  padding: 0.9rem;
+}
+
+.reader-discovery-panel h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  color: var(--ink-strong);
+}
+
+.reader-discovery-panel p {
+  margin: 0.5rem 0 0;
+  color: var(--ink-body);
+}
+
 .reader-inline-links {
   margin-top: 0.85rem;
   display: flex;
@@ -1049,6 +1099,7 @@ body {
 .admin-header,
 .reader-route-section,
 .reader-entry,
+.public-home-onboarding,
 .studio-section-card,
 .studio-empty-state,
 .studio-version-context,
@@ -1068,6 +1119,7 @@ body {
 .reader-scene-fallback-body,
 .reader-scene-placeholder,
 .reader-choice-card,
+.reader-discovery-panel,
 .reader-empty-state,
 .reader-error-state,
 .reader-loading-state {
@@ -1081,10 +1133,12 @@ body {
 .reader-header h1,
 .reader-route-section h2,
 .reader-entry h2,
+.public-home-onboarding h2,
 .studio-section-header h2,
 .admin-route h2,
 .reader-choice-list-section h3,
 .reader-scene-meta h3,
+.reader-discovery-panel h3,
 .reader-scene-header h2,
 .public-home-hero h1 {
   font-family: var(--font-display);

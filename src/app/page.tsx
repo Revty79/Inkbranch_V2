@@ -6,12 +6,12 @@ const PRIMARY_ACTIONS = [
   {
     href: "/reader",
     label: "Start Reading",
-    description: "Step into a chronicle and continue from the latest scene."
+    description: "Open the Reader and jump into your first chronicle."
   },
   {
     href: "/reader/chronicles",
-    label: "Browse Chronicles",
-    description: "Choose a world and point of view to follow."
+    label: "Continue a Chronicle",
+    description: "Pick up an existing run from its latest chapter."
   },
   {
     href: "/studio",
@@ -32,6 +32,14 @@ export default function HomePage() {
           next.
         </p>
       </section>
+      <section className="public-home-onboarding">
+        <h2>How to begin</h2>
+        <ol>
+          <li>Open the Reader to browse available chronicles.</li>
+          <li>Select a chronicle and check “Story so far.”</li>
+          <li>Choose “Continue reading” to enter the active chapter.</li>
+        </ol>
+      </section>
       <section className="public-home-actions" aria-label="Get started">
         {PRIMARY_ACTIONS.map((action) => (
           <Link
@@ -45,6 +53,10 @@ export default function HomePage() {
         ))}
       </section>
       <section className="public-home-note">
+        <p>
+          No chronicles yet? Start with <Link href="/studio">Studio</Link> to
+          create or seed story content.
+        </p>
         <p>
           Looking for runtime inspection tools?{" "}
           <Link href="/admin">Admin Inspector</Link> is available for internal

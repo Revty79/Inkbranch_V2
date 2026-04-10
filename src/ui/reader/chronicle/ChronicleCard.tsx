@@ -15,6 +15,22 @@ function formatDate(value: string): string {
   return new Date(value).toLocaleString();
 }
 
+function readSceneCtaLabel(status: string): string {
+  if (status === "active") {
+    return "Continue reading";
+  }
+
+  if (status === "paused") {
+    return "Resume reading";
+  }
+
+  if (status === "completed") {
+    return "Revisit final chapter";
+  }
+
+  return "Start reading";
+}
+
 export function ChronicleCard({
   chronicleId,
   title,
@@ -38,10 +54,13 @@ export function ChronicleCard({
           Finished: <strong>{formatDate(completedAt)}</strong>
         </p>
       ) : null}
+      <p>
+        Next step: <strong>{readSceneCtaLabel(status)}</strong>
+      </p>
       <div className="reader-inline-links">
         <Link href={`/reader/chronicles/${chronicleId}`}>Story so far</Link>
         <Link href={`/reader/chronicles/${chronicleId}/scene`}>
-          Continue reading
+          {readSceneCtaLabel(status)}
         </Link>
       </div>
     </article>

@@ -68,7 +68,7 @@ Foundation rebuild
 - [x] 21_public_product_repositioning.md
 - [x] 22_reader_experience_upgrade.md
 - [x] 23_visual_identity_port_from_v1.md
-- [ ] 24_onboarding_and_discovery.md
+- [x] 24_onboarding_and_discovery.md
 - [ ] 25_studio_language_and_flow_polish.md
 
 ## Prompt intent map
@@ -1586,3 +1586,42 @@ If blocked:
 - Follow-up notes / risks:
   - This pass intentionally prioritizes shared visual cohesion over one-off per-page redesigns.
   - Additional onboarding/discovery polish remains intentionally scoped to later prompts (`24` and `25`).
+
+
+### 2026-04-09 - Onboarding and discovery
+- Prompt: `24_onboarding_and_discovery.md`
+- Status: completed
+- Summary:
+  - Improved first-step onboarding on `/` with a clear "How to begin" sequence and stronger start/continue CTA wording.
+  - Upgraded `/reader` into a guided entry surface that explains what a chronicle is, highlights the most recent chronicle when available, and offers clear next actions.
+  - Strengthened `/reader/chronicles` discovery flow with a recommended next-step panel and improved empty-state recovery actions.
+  - Enhanced `/reader/chronicles/[chronicleId]` with clearer run-context guidance, stronger continuation path cues, and more helpful no-content recovery CTAs.
+  - Improved chronicle card/summary language to clarify start-vs-continue behavior and reduce ambiguity for first-time readers.
+  - Added scoped shared styles for onboarding/discovery panels to keep guidance visually intentional and cohesive with the existing identity pass.
+- Files changed:
+  - `src/app/page.tsx`
+  - `src/app/(reader)/reader/page.tsx`
+  - `src/app/(reader)/reader/chronicles/page.tsx`
+  - `src/app/(reader)/reader/chronicles/[chronicleId]/page.tsx`
+  - `src/ui/reader/chronicle/ChronicleCard.tsx`
+  - `src/ui/reader/chronicle/ChronicleSummary.tsx`
+  - `src/app/globals.css`
+  - `tests/e2e/demo-flow.spec.ts`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:unit`
+  - `npm run test:integration`
+  - `npm run build`
+  - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run test:e2e` (initial run failed due a strict duplicate-text selector after adding discovery guidance; updated the selector to target the chronicle heading and reran)
+  - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run test:e2e` (rerun successful)
+- Verification:
+  - Confirmed lint and typecheck pass after onboarding/discovery route and component updates.
+  - Confirmed unit and integration suites pass with no regressions.
+  - Confirmed production build succeeds with all app routes compiling.
+  - Confirmed e2e suite passes for Studio, Reader, Admin, and reader discovery -> summary -> scene flow.
+  - Confirmed scope remained user-flow/onboarding clarity only; no planner/runtime/generator ownership changes.
+- Follow-up notes / risks:
+  - Discovery guidance is currently UI-led and intentionally lightweight; deeper onboarding progression logic remains out of scope.
+  - Studio language/flow polish is intentionally deferred to `25_studio_language_and_flow_polish.md`.
