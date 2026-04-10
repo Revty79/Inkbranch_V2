@@ -67,7 +67,7 @@ Foundation rebuild
 - [x] 20_docs_and_handoff.md
 - [x] 21_public_product_repositioning.md
 - [x] 22_reader_experience_upgrade.md
-- [ ] 23_visual_identity_port_from_v1.md
+- [x] 23_visual_identity_port_from_v1.md
 - [ ] 24_onboarding_and_discovery.md
 - [ ] 25_studio_language_and_flow_polish.md
 
@@ -1556,3 +1556,33 @@ If blocked:
 - Follow-up notes / risks:
   - Reader choice submission currently redirects with concise status notices; richer per-choice failure messaging could be improved in a future pass.
   - This prompt intentionally avoided broader visual-identity overhaul and onboarding redesign, which remain in later scoped prompts.
+
+
+### 2026-04-09 - Visual identity port from v1
+- Prompt: `23_visual_identity_port_from_v1.md`
+- Status: completed
+- Summary:
+  - Applied a V1-inspired visual identity layer across shared styles using warm ink-and-paper tokens and cohesive surface treatments while preserving V2 architecture boundaries.
+  - Introduced shared typography and color tokens in `:root` to unify brand tone across public, reader, studio, and admin-facing product surfaces.
+  - Upgraded global surface styling for cards, panels, headers, nav elements, badges, and CTA controls to feel more intentional and story-product oriented.
+  - Improved long-form scene readability with stronger prose typography, spacing, and manuscript-like surface contrast.
+  - Added subtle entry animation and consistent shadow/border hierarchy to reduce sterile appearance without adding decorative clutter.
+- Files changed:
+  - `src/app/globals.css`
+  - `prompts/STATUS.md`
+- Commands run:
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run test:unit`
+  - `npm run test:integration`
+  - `npm run build`
+  - `$env:DATABASE_URL='postgresql://inkbranch_app:Darkness1%40@localhost:5432/inkbranch_dev'; npm run test:e2e`
+- Verification:
+  - Confirmed lint and typecheck pass after shared visual token/style changes.
+  - Confirmed unit and integration suites pass with no regressions.
+  - Confirmed production build succeeds with all routes compiling.
+  - Confirmed e2e suite passes for Studio, Reader, Admin, and Reader flow routes after visual updates.
+  - Confirmed scope remained visual/product-surface only; no planner/runtime/generator/business logic changes were introduced.
+- Follow-up notes / risks:
+  - This pass intentionally prioritizes shared visual cohesion over one-off per-page redesigns.
+  - Additional onboarding/discovery polish remains intentionally scoped to later prompts (`24` and `25`).
