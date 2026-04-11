@@ -1,0 +1,324 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  READER
+  AUTHOR
+  ADMIN
+}
+
+enum StoryStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ConstraintStrength {
+  HARD
+  SOFT
+}
+
+enum OutcomeType {
+  MUST_HAPPEN
+  MUST_NOT_HAPPEN
+}
+
+enum GuardrailPolicy {
+  REDIRECT
+  REINTERPRET
+  SOFT_BLOCK
+  HARD_BLOCK
+}
+
+enum SessionRunStatus {
+  ACTIVE
+  COMPLETED
+  ABANDONED
+}
+
+enum ListingStatus {
+  DRAFT
+  LIVE
+  UNLISTED
+  ARCHIVED
+}
+
+enum AccessSource {
+  AUTHOR
+  PURCHASE
+  ADMIN_GRANT
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id                   String              @id @default(cuid())
+  email                String              @unique
+  name                 String?
+  passwordHash         String
+  role                 Role                @default(READER)
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  sessions             Session[]
+  authoredStories      Story[]             @relation("StoryAuthor")
+  createdSpineVersions StorySpineVersion[] @relation("SpineCreatedBy")
+  createdListings      StoreListing[]      @relation("ListingCreatedBy")
+  storySessions        StorySession[]      @relation("ReaderSessions")
+  purchases            Purchase[]          @relation("BuyerPurchases")
+  storyAccessGrants    StoryAccessGrant[]  @relation("StoryAccessUser")
+  adminGrantedAccess   StoryAccessGrant[]  @relation("AccessGrantedBy")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Story {
+  id            String      @id @default(cuid())
+  slug          String      @unique
+  title         String
+  subtitle      String?
+  synopsis      String?
+  coverImageUrl String?
+  status        StoryStatus @default(DRAFT)
+  authorId      String
+  publishedAt   DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  author        User                @relation("StoryAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  spineVersions StorySpineVersion[]
+  listings      StoreListing[]
+  accessGrants  StoryAccessGrant[]
+  sessions      StorySession[]
+
+  @@index([authorId, status])
+  @@index([status, publishedAt])
+}
+
+model StorySpineVersion {
+  id                   String   @id @default(cuid())
+  storyId              String
+  version              Int
+  isActive             Boolean  @default(true)
+  arcStatement         String?
+  toneGuide            String?
+  narrativeBoundaries  String?
+  guardrailInstruction String?
+  createdById          String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  story              Story                    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  createdBy          User                     @relation("SpineCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  canonRules         StoryCanonRule[]
+  requiredEvents     StoryRequiredEvent[]
+  characterTruths    StoryCharacterTruth[]
+  outcomeConstraints StoryOutcomeConstraint[]
+  sessions           StorySession[]
+
+  @@unique([storyId, version])
+  @@index([storyId, isActive])
+}
+
+model StoryCanonRule {
+  id             String             @id @default(cuid())
+  spineVersionId String
+  orderIndex     Int
+  title          String
+  description    String
+  strength       ConstraintStrength @default(HARD)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  spineVersion StorySpineVersion @relation(fields: [spineVersionId], references: [id], onDelete: Cascade)
+
+  @@unique([spineVersionId, orderIndex])
+  @@index([spineVersionId])
+}
+
+model StoryRequiredEvent {
+  id             String   @id @default(cuid())
+  spineVersionId String
+  orderIndex     Int
+  title          String
+  description    String
+  mustOccur      Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  spineVersion      StorySpineVersion @relation(fields: [spineVersionId], references: [id], onDelete: Cascade)
+  turns             StoryTurn[]       @relation("TurnEventContext")
+  currentInSessions StorySession[]    @relation("SessionCurrentRequiredEvent")
+
+  @@unique([spineVersionId, orderIndex])
+  @@index([spineVersionId])
+}
+
+model StoryCharacterTruth {
+  id             String             @id @default(cuid())
+  spineVersionId String
+  characterName  String
+  truth          String
+  strength       ConstraintStrength @default(HARD)
+  notes          String?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  spineVersion StorySpineVersion @relation(fields: [spineVersionId], references: [id], onDelete: Cascade)
+
+  @@index([spineVersionId, characterName])
+}
+
+model StoryOutcomeConstraint {
+  id             String             @id @default(cuid())
+  spineVersionId String
+  orderIndex     Int
+  outcomeType    OutcomeType
+  title          String
+  description    String
+  strength       ConstraintStrength @default(HARD)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  spineVersion StorySpineVersion @relation(fields: [spineVersionId], references: [id], onDelete: Cascade)
+
+  @@unique([spineVersionId, orderIndex])
+  @@index([spineVersionId, outcomeType])
+}
+
+model StorySession {
+  id                     String           @id @default(cuid())
+  storyId                String
+  readerId               String
+  spineVersionId         String?
+  currentRequiredEventId String?
+  status                 SessionRunStatus @default(ACTIVE)
+  startedAt              DateTime         @default(now())
+  completedAt            DateTime?
+  updatedAt              DateTime         @updatedAt
+
+  story                Story               @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  reader               User                @relation("ReaderSessions", fields: [readerId], references: [id], onDelete: Cascade)
+  spineVersion         StorySpineVersion?  @relation(fields: [spineVersionId], references: [id], onDelete: SetNull)
+  currentRequiredEvent StoryRequiredEvent? @relation("SessionCurrentRequiredEvent", fields: [currentRequiredEventId], references: [id], onDelete: SetNull)
+  turns                StoryTurn[]
+  state                StorySessionState?
+
+  @@index([storyId, readerId])
+  @@index([readerId, status])
+}
+
+model StoryTurn {
+  id               String           @id @default(cuid())
+  sessionId        String
+  turnIndex        Int
+  readerInput      String
+  aiResponse       String
+  appliedGuardrail GuardrailPolicy?
+  eventContextId   String?
+  createdAt        DateTime         @default(now())
+
+  session      StorySession        @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  eventContext StoryRequiredEvent? @relation("TurnEventContext", fields: [eventContextId], references: [id], onDelete: SetNull)
+
+  @@unique([sessionId, turnIndex])
+  @@index([sessionId])
+  @@index([eventContextId])
+}
+
+model StorySessionState {
+  id                String   @id @default(cuid())
+  sessionId         String   @unique
+  continuityState   Json
+  relationshipState Json?
+  pacingState       Json?
+  emotionalTone     String?
+  updatedAt         DateTime @updatedAt
+
+  session StorySession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model StoreListing {
+  id               String        @id @default(cuid())
+  storyId          String
+  createdById      String
+  titleOverride    String?
+  synopsisOverride String?
+  priceCents       Int
+  currency         String        @default("USD")
+  status           ListingStatus @default(DRAFT)
+  publishedAt      DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  story        Story              @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  createdBy    User               @relation("ListingCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  purchases    Purchase[]
+  accessGrants StoryAccessGrant[]
+
+  @@index([storyId, status])
+  @@index([status, publishedAt])
+}
+
+model Purchase {
+  id          String         @id @default(cuid())
+  listingId   String
+  buyerId     String
+  status      PurchaseStatus @default(PENDING)
+  amountCents Int
+  currency    String         @default("USD")
+  provider    String?
+  providerRef String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  listing     StoreListing      @relation(fields: [listingId], references: [id], onDelete: Restrict)
+  buyer       User              @relation("BuyerPurchases", fields: [buyerId], references: [id], onDelete: Restrict)
+  accessGrant StoryAccessGrant?
+
+  @@index([buyerId, status])
+  @@index([listingId, status])
+}
+
+model StoryAccessGrant {
+  id          String       @id @default(cuid())
+  storyId     String
+  userId      String
+  source      AccessSource
+  listingId   String?
+  purchaseId  String?      @unique
+  grantedById String?
+  expiresAt   DateTime?
+  createdAt   DateTime     @default(now())
+
+  story     Story         @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  user      User          @relation("StoryAccessUser", fields: [userId], references: [id], onDelete: Cascade)
+  listing   StoreListing? @relation(fields: [listingId], references: [id], onDelete: SetNull)
+  purchase  Purchase?     @relation(fields: [purchaseId], references: [id], onDelete: SetNull)
+  grantedBy User?         @relation("AccessGrantedBy", fields: [grantedById], references: [id], onDelete: SetNull)
+
+  @@unique([storyId, userId])
+  @@index([userId, source])
+  @@index([storyId, source])
+}
